@@ -1,3 +1,9 @@
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="loading.css">
+</head>
+<body ng-app="app.cooperados.declararetencontribuiprev">
 <form ng-controller="DeclaraRetenContribuiPrevController" id="declarRetencContribPrev">
 	<div class="container">
 		<div class="row">
@@ -6,7 +12,7 @@
 			</div>
 		</div>
 		<div class="row">
-			<img class="image-borders" src="imagem.jpg">
+			<img class="image-borders" ng-src="dadosRetencContribPrev.dadosCooperado.fotEmp">
 			<div class="row">
 				<div class="col-md-8">
 					<div class="col-md-10">
@@ -65,13 +71,33 @@
 				<div class="col-md-12">
 					<div class="col-md-3">
 						<label for="cnpjAIncluir">CNPJ/MF</label>
-						<input maxlength="18" ui-mask="99.999.999/9999-99" ng-pattern="/^[0-9]{1,7}[-\.\/]?+$/" id="cnpjAIncluir" ng-model="empresaAIncluir.cnpj" class="form-control">
+
+						<input 
+						type="text" 
+						class="form-control" 
+						maxlength="18" ui-mask="99.999.999/9999-99" 
+						ng-pattern="/^[0-9]{1,7}[-\.\/]?+$/"
+						id="cnpjAIncluir" 
+						ng-model="empresaAIncluir.cnpj"
+						ng-keyup="completeEmpresa()" class="form-control"
+						placeholder="CNPJ/MF" ng-readonly="desabilitarCamposEmpresa" >
+						<ul class="list-group" 
+						ng-model="hideEmpresa" 
+						ng-hide="hideEmpresa">
+						<a class="list-group-item" 
+						href="" 
+						ng-click="insertLineEmpresa(empresa)" 
+						ng-repeat="empresa in filterEmpresa">
+							{{empresa.numIns}} - {{empresa.razSoc}}
+						</a>
+						</ul>
 						<!-- Testar o REGEX -->
 						<!-- COLOCAR AUTO COMPLETE -->
 					</div>
 					<div class="col-md-9">
 						<label for="nomeAIncluir">Empresa</label>
-						<input maxlength="100" id="nomeAIncluir" ng-model="empresaAIncluir.nomeEmpresa" class="form-control">
+						<input maxlength="100" id="nomeAIncluir" 
+						ng-model="empresaAIncluir.nomeEmpresa" class="form-control" ng-readonly="desabilitarCamposEmpresa" >
 					</div>
 				</div>
 			</div>
@@ -152,7 +178,7 @@
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					LIMITE MÁXIMO DE CONTRIBUIÇÃO : {{limiteMaxContrib}}
+					LIMITE MÁXIMO DE CONTRIBUIÇÃO : {{dadosRetencContribPrev.informacoesDatasPermitidas.limCon}}
 				</div>
 			</div>
 		</div>
@@ -164,9 +190,9 @@
 				<div class="col-md-1"></div>
 				<div class="col-md-3">
 					<div ng-repeat="anexo in anexos" class="row">
-						<label ng-model="anexo" ></label><span class="removerAnexo"></span>
-						<!-- Pegar nome do arquivo quando decidirem 
-							qual modelo de escolha de arquivo usar -->
+						<label ng-model="anexo" ></label><span class="removerAnexo(anexo.id)"></span>
+						<!-- Pegar nome do arquivo e adicionar na lista 
+							quando decidirem qual modelo de escolha de arquivo usar -->
 					</div>
 				</div>
 			</div>
@@ -187,7 +213,7 @@
 				</div>
 			</div>
 		</div>
-		<div ng-repeat="historico in historicoRetencaoContrib" class="row">
+		<div ng-repeat="historico in dadosRetencContribPrev.declaracoesIncluidas_cmpIni_cmpFim" class="row">
 			<div class="col-md-12">
 				<table>
 					<thead>
@@ -209,26 +235,35 @@
 					<tbody>
 						<tr>
 							<td>
-								{{historico.dataEnvio}}
+								{{historico.datMov}}
 							</td>
 							<td>
-								{{historico.mesInicialRef}} - {{historico.mesFinalRef}}
+								{{historico.cmpIni}} {{-}} {{historico.cmpFim}}
 							</td>
 							<td>
-								{{historico.dataInicioValidade}}
+								{{getInicioValidade(historico.cmpIni)}}
 							</td>
 							<td>
-								{{historico.dataFimValidade}}
+								{{getFimValidade(historico.cmpFim)}}
 							</td>
 						</tr>
 
 					</tbody>
 				</table>
-				<div class="collapse">
-					<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo">Simple collapsible</button>
+				<!-- <div class="collapse">
+					<button type="button" class="left-align btn btnCollapse" data-toggle="collapse" data-target="#demo">+</button>
 					<div id="demo" class="collapse">
+						<table>
+							<thead>
+							</thead>
+							<<tbody>
+								<tr ng-repeat="empresaHist in historico.">
+
+								</tr>
+							</tbody>
+						</table>
 					</div>
-				</div>
+				</div> -->
 			</div>
 		</div>
 		<div class="row">
@@ -246,3 +281,11 @@
 		</div>
 	</div>
 </div>
+
+<script src="angular.min.js"></script>
+<script src="angucomplete-alt.min.js"></script>
+<script src="declararetencontribuiprev.js"></script>
+
+
+</body>
+</html>
