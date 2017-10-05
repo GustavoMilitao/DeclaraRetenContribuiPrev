@@ -1,7 +1,7 @@
 <html>
 <head>
 	<link rel="stylesheet" type="text/css" href="bootstrap.css">
-	<link rel="stylesheet" type="text/css" href="loading.css">
+	<link rel="stylesheet" type="text/css" href="declararetencontribuiprev.css">
 </head>
 <body ng-app="app.cooperados.declararetencontribuiprev">
 <form ng-controller="DeclaraRetenContribuiPrevController" id="declarRetencContribPrev">
@@ -12,7 +12,7 @@
 			</div>
 		</div>
 		<div class="row">
-			<img class="image-borders" ng-src="dadosRetencContribPrev.dadosCooperado.fotEmp">
+			<img class="image-borders" ng-src="{{dadosRetencContribPrev.dadosCooperado.fotEmp}}">
 			<div class="row">
 				<div class="col-md-8">
 					<div class="col-md-10">
@@ -32,7 +32,7 @@
 					<div class="col-md-5">
 						<label for="cpf">CPF</label>
 						<input maxlength="14" ui-mask="999.999.999-99" 
-						ng-pattern="/^[0-9]{1,7}[-\.\/]?+$/" 
+						 
 						ng-model="dadosRetencContribPrev.dadosCooperado.numCpf" id="cpf" class="form-control input-borders" readonly>
 					</div>
 					<div class="col-md-5">
@@ -58,11 +58,11 @@
 			<div class="col-md-12">
 				<div class="col-md-3">
 					<label for="mesInicialRef"></label>
-					<input ui-mask="99/9999" ng-pattern="/^[0-9]{1,7}[-\.\/]?+$/" id="mesInicialRef" ng-model="mesInicialRef" class="form-control">
+					<input ui-mask="99/9999"  id="mesInicialRef" ng-model="mesInicialRef" class="form-control">
 				</div>
 				<div class="col-md-3">
 					<label for="mesFinalRef"></label>
-					<input ui-mask="99/9999" ng-pattern="/^[0-9]{1,7}[-\.\/]?+$/" id="mesFinalRef" ng-model="mesFinalRef" class="form-control">
+					<input ui-mask="99/9999"  id="mesFinalRef" ng-model="mesFinalRef" class="form-control">
 				</div>
 			</div>
 		</div>
@@ -71,12 +71,11 @@
 				<div class="col-md-12">
 					<div class="col-md-3">
 						<label for="cnpjAIncluir">CNPJ/MF</label>
-
 						<input 
 						type="text" 
 						class="form-control" 
 						maxlength="18" ui-mask="99.999.999/9999-99" 
-						ng-pattern="/^[0-9]{1,7}[-\.\/]?+$/"
+						
 						id="cnpjAIncluir" 
 						ng-model="empresaAIncluir.cnpj"
 						ng-keyup="completeEmpresa()" class="form-control"

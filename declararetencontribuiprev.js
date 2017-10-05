@@ -2,34 +2,34 @@
 	'use strict';
 
 	angular
-	    .module('app.cooperados.declararetencontribuiprev', ['app.cooperados.service', 'ngRoute'])
-	    .controller('DeclaraRetenContribuiPrevController', DeclaraRetenContribuiPrevController)
-	    .config(config);
+	    .module('app.cooperados.declararetencontribuiprev', []/*['app.cooperados.service', 'ngRoute']*/)
+	    .controller('DeclaraRetenContribuiPrevController', DeclaraRetenContribuiPrevController);
+	    // .config(config);
 
 
 	/** @ngInject */
 
 
 	/** @ngInject */
-	function config($routeProvider){
-	    $routeProvider
-	    .when('/', {
-		templateUrl: '/js/cooperado/unimedbh/declararetencontribuiprev/declararetencontribuiprev.html',
-		controller: 'DeclaraRetenContribuiPrevController as vm',
-		resolve:{
- 			consultarCooperado:function(cooperados){                   
-                 return cooperados.consultarCooperado();                                            
-            }
-		}
-	    })
-	    .otherwise({
-		redirectTo: '/'
-	    });
+	// function config($routeProvider){
+	//     $routeProvider
+	//     .when('/', {
+	// 	templateUrl: '/js/cooperado/unimedbh/declararetencontribuiprev/declararetencontribuiprev.html',
+	// 	controller: 'DeclaraRetenContribuiPrevController as vm',
+	// 	resolve:{
+ 	// 		consultarCooperado:function(cooperados){                   
+    //              return cooperados.consultarCooperado();                                            
+    //         }
+	// 	}
+	//     })
+	//     .otherwise({
+	// 	redirectTo: '/'
+	//     });
 
-	}
+	// }
 
 	/** @ngInject */
-	function DeclaraRetenContribuiPrevController($scope,cooperados,consultarCooperado) {
+	function DeclaraRetenContribuiPrevController($scope/*,cooperados,consultarCooperado*/) {
 
 		/* Objetos utilizados na inclusão atual */
 		$scope.mesInicialRef = "";
@@ -51,7 +51,9 @@
 		/* ------------------------------- */
 
 
-		$scope.dadosRetencContribPrev;
+		$scope.dadosRetencContribPrev = {};
+		$scope.dadosRetencContribPrev.dadosCooperado = {};
+		$scope.dadosRetencContribPrev.dadosCooperado.fotEmp = "http://www.gettyimages.com/gi-resources/images/Embed/new/embed2.jpg";
 		$scope.dadosRetencContribPrev.listaCNPJ = [];
 		$scope.dadosRetencContribPrev.listaCNPJ.push({
 			numIns : "1122333444555",
@@ -79,7 +81,7 @@
 
 		$scope.completeEmpresa = function () {
 			if ($scope.empresaAIncluir.cnpj && $scope.empresaAIncluir.cnpj != "") {
-				team.hideEmpresa = false;
+				$scope.hideEmpresa = false;
 				var output = [];
 				angular.forEach($scope.dadosRetencContribPrev.listaCNPJ, function (empresa) {
 					if (empresa.numIns.toLowerCase().indexOf($scope.empresaAIncluir.cnpj.toLowerCase()) >= 0) {
@@ -93,14 +95,14 @@
 		}
 
 		$scope.insertLineEmpresa = function (empresa) {
-				if (contemEmpresaNaLista(empresa.razSoc, $scope.dadosRetencContribPrev.listaCNPJ)) {
+				if ($scope.contemEmpresaNaLista(empresa.razSoc, $scope.empresasPagadoras)) {
 					alert(empresa.razSoc + " já adicionada.");
 				} else {
 					// empresasPagadoras.push(empresa);
 					// $scope.empresaAIncluir.cnpj = "";
 					$scope.empresaAIncluir.cnpj = empresa.numIns;
 					$scope.empresaAIncluir.nomeEmpresa = empresa.razSoc;
-
+					$scope.desabilitarCamposEmpresa = true;
 					$scope.hideEmpresa = true;
 					// $http({
 					// 	method: "PUT",
@@ -111,6 +113,16 @@
 					// 	data: team
 					// });
 				}
+		}
+
+		$scope.contemEmpresaNaLista = function(razaoSocial, listaEmpresas) {
+			var contem = false;
+			for(var i =0; i < listaEmpresas.length; i++){
+				if(listaEmpresas[i].razSoc === razaoSocial){
+					contem = true;
+				}
+			}
+			return contem;
 		}
 
 		var getInicioValidade = function(refIni){
