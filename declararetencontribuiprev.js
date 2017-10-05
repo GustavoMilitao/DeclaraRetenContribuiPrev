@@ -55,26 +55,28 @@
 		$scope.dadosRetencContribPrev.dadosCooperado = {};
 		$scope.dadosRetencContribPrev.dadosCooperado.fotEmp = "http://www.gettyimages.com/gi-resources/images/Embed/new/embed2.jpg";
 		$scope.dadosRetencContribPrev.listaCNPJ = [];
-		$scope.dadosRetencContribPrev.listaCNPJ.push({
-			numIns : "1122333444555",
-			razSoc : "EMPRESA DE TESTE DO GUGU1"
-		});
-		$scope.dadosRetencContribPrev.listaCNPJ.push({
-			numIns : "43215",
-			razSoc : "EMPRESA DE TESTE DO GUGU2"
-		});
-		$scope.dadosRetencContribPrev.listaCNPJ.push({
-			numIns : "54321",
-			razSoc : "EMPRESA DE TESTE DO GUGU3"
-		});
-		$scope.dadosRetencContribPrev.listaCNPJ.push({
-			numIns : "32154",
-			razSoc : "EMPRESA DE TESTE DO GUGU4"
-		});
-		$scope.dadosRetencContribPrev.listaCNPJ.push({
-			numIns : "21543",
-			razSoc : "EMPRESA DE TESTE DO GUGU5"
-		});
+		for(var i = 0; i< 10000; i++){
+			$scope.dadosRetencContribPrev.listaCNPJ.push({
+				numIns : "1122333444555",
+				razSoc : "EMPRESA DE TESTE DO GUGU1"
+			});
+		}
+		// $scope.dadosRetencContribPrev.listaCNPJ.push({
+		// 	numIns : "43215",
+		// 	razSoc : "EMPRESA DE TESTE DO GUGU2"
+		// });
+		// $scope.dadosRetencContribPrev.listaCNPJ.push({
+		// 	numIns : "54321",
+		// 	razSoc : "EMPRESA DE TESTE DO GUGU3"
+		// });
+		// $scope.dadosRetencContribPrev.listaCNPJ.push({
+		// 	numIns : "32154",
+		// 	razSoc : "EMPRESA DE TESTE DO GUGU4"
+		// });
+		// $scope.dadosRetencContribPrev.listaCNPJ.push({
+		// 	numIns : "21543",
+		// 	razSoc : "EMPRESA DE TESTE DO GUGU5"
+		// });
 		$scope.param1 = "VAI VIR PREENCHIDO";
 		$scope.param2 = "VAI VIR PREENCHIDO";
 
@@ -84,7 +86,8 @@
 				$scope.hideEmpresa = false;
 				var output = [];
 				angular.forEach($scope.dadosRetencContribPrev.listaCNPJ, function (empresa) {
-					if (empresa.numIns.toLowerCase().indexOf($scope.empresaAIncluir.cnpj.toLowerCase()) >= 0) {
+					if (empresa.numIns.toLowerCase().indexOf($scope.empresaAIncluir.cnpj.toLowerCase()) >= 0 
+					&& output.length < 10) {
 						output.push(empresa);
 					}
 				});
