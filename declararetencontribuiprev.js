@@ -30,27 +30,26 @@
 
 	/** @ngInject */
 	function DeclaraRetenContribuiPrevController($scope,cooperados,consultarCooperado) {
-		$scope.nome = "";
-		$scope.crm = "";
-		$scope.cpf = "";
-		$scope.numInscInss = "";
-		$scope.mesInicialRef = null;
-		$scope.mesFinalRef = null;
+
+		/* Objetos utilizados na inclusão atual */
+		$scope.mesInicialRef = "";
+		$scope.mesFinalRef = "";
+		$scope.mesInicialRefData = null;
+		$scope.mesFInalRefData = null;
 		$scope.empresasPagadoras = [];
 		$scope.anexos = [];
-		$scope.param1 = "VAI VIR PREENCHIDO";
-		$scope.param2 = "VAI VIR PREENCHIDO";
-		$scope.fimInc = "";
-		$scope.limiteMaxContrib = 0.0;
-
 		$scope.empresaAIncluir = {
 			cnpj : "",
 			nomeEmpresa : "",
 			valSalarContrib : 0.0,
 			valRetencInss : 0.0
 		}
+		/* ------------------------------- */
 
 
+		$scope.dadosRetencContribPrev;
+		$scope.param1 = "VAI VIR PREENCHIDO";
+		$scope.param2 = "VAI VIR PREENCHIDO";
 	}
 
 	angular.element(document).ready(function() {

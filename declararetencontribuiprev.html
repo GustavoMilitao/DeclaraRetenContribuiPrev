@@ -11,11 +11,13 @@
 				<div class="col-md-8">
 					<div class="col-md-10">
 						<label for="nome">Nome</label>
-						<input maxlength="100" ng-model="nome" id="nome" class="form-control input-borders" readonly>
+						<input maxlength="100" 
+						ng-model="dadosRetencContribPrev.dadosCooperado.nomFun" id="nome" class="form-control input-borders" readonly>
 					</div>
 					<div class="col-md-2">
 						<label for="crm">CRM</label>
-						<input maxlength="6" ng-model="crm" class="form-control" readonly>
+						<input maxlength="6" 
+						ng-model="dadosRetencContribPrev.dadosCooperado.numCad" class="form-control" readonly>
 					</div>
 				</div>
 			</div>
@@ -23,11 +25,14 @@
 				<div class="col-md-8">
 					<div class="col-md-5">
 						<label for="cpf">CPF</label>
-						<input maxlength="14" ui-mask="999.999.999-99" ng-pattern="/^[0-9]{1,7}[-\.\/]?+$/" ng-model="cpf" id="cpf" class="form-control input-borders" readonly>
+						<input maxlength="14" ui-mask="999.999.999-99" 
+						ng-pattern="/^[0-9]{1,7}[-\.\/]?+$/" 
+						ng-model="dadosRetencContribPrev.dadosCooperado.numCpf" id="cpf" class="form-control input-borders" readonly>
 					</div>
 					<div class="col-md-5">
 						<label for="numInscInss">Número Inscrição INSS</label>
-						<input maxlength="12" id="numInscInss" ng-model="numInscInss" class="form-control" readonly>
+						<input maxlength="12" id="numInscInss" 
+						ng-model="dadosRetencContribPrev.dadosCooperado.numPis" class="form-control" readonly>
 					</div>
 				</div>
 			</div>
@@ -40,18 +45,18 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-				<label class="text-center labelNegrito"> O prazo de envio da declaração para competência atual encerra-se em {{fimInc}} </label>
+				<label class="text-center labelNegrito"> O prazo de envio da declaração para competência atual encerra-se em {{dadosRetencContribPrev.informacoesDatasPermitidas.fimInc}} </label>
 			</div>
 		</div>
 		<div class="row">
 			<div class="col-md-12">
 				<div class="col-md-3">
 					<label for="mesInicialRef"></label>
-					<input ui-mask="99/99/9999" ng-pattern="/^[0-9]{1,7}[-\.\/]?+$/" id="mesInicialRef" ng-model="mesInicialRef" class="form-control">
+					<input ui-mask="99/9999" ng-pattern="/^[0-9]{1,7}[-\.\/]?+$/" id="mesInicialRef" ng-model="mesInicialRef" class="form-control">
 				</div>
 				<div class="col-md-3">
 					<label for="mesFinalRef"></label>
-					<input ui-mask="99/99/9999" ng-pattern="/^[0-9]{1,7}[-\.\/]?+$/" id="mesFinalRef" ng-model="mesFinalRef" class="form-control">
+					<input ui-mask="99/9999" ng-pattern="/^[0-9]{1,7}[-\.\/]?+$/" id="mesFinalRef" ng-model="mesFinalRef" class="form-control">
 				</div>
 			</div>
 		</div>
@@ -182,9 +187,48 @@
 				</div>
 			</div>
 		</div>
-		<div class="row">
+		<div ng-repeat="historico in historicoRetencaoContrib" class="row">
 			<div class="col-md-12">
-				<!-- TODO : Criar HTML do histórico de envio de declarações -->
+				<table>
+					<thead>
+						<tr>
+							<th>
+								Data de Envio
+							</th>
+							<th>
+								Período de Referência
+							</th>
+							<th>
+								Data Início Validade
+							</th>
+							<th>
+								Data Fim Validade
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>
+								{{historico.dataEnvio}}
+							</td>
+							<td>
+								{{historico.mesInicialRef}} - {{historico.mesFinalRef}}
+							</td>
+							<td>
+								{{historico.dataInicioValidade}}
+							</td>
+							<td>
+								{{historico.dataFimValidade}}
+							</td>
+						</tr>
+
+					</tbody>
+				</table>
+				<div class="collapse">
+					<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo">Simple collapsible</button>
+					<div id="demo" class="collapse">
+					</div>
+				</div>
 			</div>
 		</div>
 		<div class="row">
