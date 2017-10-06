@@ -36,7 +36,7 @@
 		$scope.mesFinalRef = "";
 		$scope.mesInicialRefData = null;
 		$scope.mesFInalRefData = null;
-		$scope.empresasPagadoras = [];
+		$scope.empresasPagadoras = [{ nomeEmpresa : "TESTE" , cnpj : "1", valSalarContrib : "0", valRetencInss : "0" }];
 		$scope.anexos = [];
 		$scope.empresaAIncluir = {
 			cnpj : "",
@@ -50,8 +50,9 @@
 		$scope.desabilitarCamposEmpresa = false;
 		/* ------------------------------- */
 
-
 		$scope.dadosRetencContribPrev = {};
+		$scope.dadosRetencContribPrev.informacoesDatasPermitidas = {};
+		$scope.dadosRetencContribPrev.informacoesDatasPermitidas.fimInc = "11/11/2011";
 		$scope.dadosRetencContribPrev.dadosCooperado = {};
 		$scope.dadosRetencContribPrev.dadosCooperado.fotEmp = "http://www.gettyimages.com/gi-resources/images/Embed/new/embed2.jpg";
 		$scope.dadosRetencContribPrev.listaCNPJ = [];
@@ -77,7 +78,7 @@
 		// 	numIns : "21543",
 		// 	razSoc : "EMPRESA DE TESTE DO GUGU5"
 		// });
-		$scope.param1 = "VAI VIR PREENCHIDO";
+		$scope.param1 = "Se dados acima incorretos, entrar em contato com sua analista de relacionamento para atualização.";
 		$scope.param2 = "VAI VIR PREENCHIDO";
 
 

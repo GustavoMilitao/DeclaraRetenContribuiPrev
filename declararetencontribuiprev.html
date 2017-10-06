@@ -7,13 +7,16 @@
 <form ng-controller="DeclaraRetenContribuiPrevController" id="declarRetencContribPrev">
 	<div class="container">
 		<div class="row">
-			<div class="col-md-4 text-center">
+			<div class="text-center">
 				DECLARAÇÃO RETENÇÃO CONTRIBUIÇÃO PREVIDENCIÁRIA
 			</div>
 		</div>
 		<div class="row">
-			<img class="image-borders" ng-src="{{dadosRetencContribPrev.dadosCooperado.fotEmp}}">
+			<div class="col-md-2">
+				<img class="foto" ng-src="{{dadosRetencContribPrev.dadosCooperado.fotEmp}}">
+			</div>
 			<div class="row">
+				<div class="row">
 				<div class="col-md-8">
 					<div class="col-md-10">
 						<label for="nome">Nome</label>
@@ -26,165 +29,166 @@
 						ng-model="dadosRetencContribPrev.dadosCooperado.numCad" class="form-control" readonly>
 					</div>
 				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-8">
-					<div class="col-md-5">
-						<label for="cpf">CPF</label>
-						<input maxlength="14" ui-mask="999.999.999-99" 
-						 
-						ng-model="dadosRetencContribPrev.dadosCooperado.numCpf" id="cpf" class="form-control input-borders" readonly>
+				<div class="row">
+					<div class="col-md-8">
+							<div class="col-md-5">
+								<label for="cpf">CPF</label>
+								<input maxlength="14" ui-mask="999.999.999-99" 
+								ng-model="dadosRetencContribPrev.dadosCooperado.numCpf" id="cpf" class="form-control input-borders" readonly>
+							</div>
+							<div class="col-md-5">
+								<label for="numInscInss">Número Inscrição INSS</label>
+								<input maxlength="12" id="numInscInss" 
+								ng-model="dadosRetencContribPrev.dadosCooperado.numPis" class="form-control" readonly>
+						</div>
 					</div>
-					<div class="col-md-5">
-						<label for="numInscInss">Número Inscrição INSS</label>
-						<input maxlength="12" id="numInscInss" 
-						ng-model="dadosRetencContribPrev.dadosCooperado.numPis" class="form-control" readonly>
-					</div>
+				</div>
 				</div>
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-md-12">
-				<label ng-model="param1" class="labelParam1">
+			<div class="col-md-12 text-center">
+				<label class="labelParam1">
+					{{param1}}
 				</label>
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-md-12">
-				<label class="text-center labelNegrito"> O prazo de envio da declaração para competência atual encerra-se em {{dadosRetencContribPrev.informacoesDatasPermitidas.fimInc}} </label>
+			<div class="col-md-12 text-center">
+				<label class="labelNegrito"> O prazo de envio da declaração para competência atual encerra-se em {{dadosRetencContribPrev.informacoesDatasPermitidas.fimInc}} </label>
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-md-12">
-				<div class="col-md-3">
-					<label for="mesInicialRef"></label>
-					<input ui-mask="99/9999"  id="mesInicialRef" ng-model="mesInicialRef" class="form-control">
-				</div>
-				<div class="col-md-3">
-					<label for="mesFinalRef"></label>
-					<input ui-mask="99/9999"  id="mesFinalRef" ng-model="mesFinalRef" class="form-control">
-				</div>
+			<div class="col-md-3">
+				<label for="mesInicialRef">Mês inicial de Referência</label>
+				<input ui-mask="99/9999"  id="mesInicialRef" ng-model="mesInicialRef" class="form-control">
+			</div>
+			<div class="col-md-3">
+				<label for="mesFinalRef">Mês final de Referência</label>
+				<input ui-mask="99/9999"  id="mesFinalRef" ng-model="mesFinalRef" class="form-control">
 			</div>
 		</div>
-		<div class="row empresasPagadoras">
-			<div class="row">
-				<div class="col-md-12">
-					<div class="col-md-3">
-						<label for="cnpjAIncluir">CNPJ/MF</label>
-						<input 
-						type="text" 
-						class="form-control" 
-						maxlength="18" ui-mask="99.999.999/9999-99" 
-						
-						id="cnpjAIncluir" 
-						ng-model="empresaAIncluir.cnpj"
-						ng-keyup="completeEmpresa()" class="form-control"
-						placeholder="CNPJ/MF" ng-readonly="desabilitarCamposEmpresa" >
-						<ul class="list-group" 
-						ng-model="hideEmpresa" 
-						ng-hide="hideEmpresa">
-						<a class="list-group-item" 
-						href="#" 
-						ng-click="insertLineEmpresa(empresa)" 
-						ng-repeat="empresa in filterEmpresa">
-							{{empresa.numIns}} - {{empresa.razSoc}}
-						</a>
-						</ul>
-						<!-- Testar o REGEX -->
-						<!-- COLOCAR AUTO COMPLETE -->
-					</div>
-					<div class="col-md-9">
-						<label for="nomeAIncluir">Empresa</label>
-						<input maxlength="100" id="nomeAIncluir" 
-						ng-model="empresaAIncluir.nomeEmpresa" class="form-control" ng-readonly="desabilitarCamposEmpresa" >
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-12">
-					<div class="col-md-3">
-						<label for="valSalContrib">Valor do salário de contribuição</label>
-						<input maxlength="10,2" id="valSalContrib" ng-model="empresaAIncluir.valSalarContrib" class="form-control">
-					</div>
-					<div class="col-md-3">
-						<label for="valRetencInss">Valor da retenção para o INSS</label>
-						<input maxlength="10,2" id="valRetencInss" ng-model="empresaAIncluir.valRetencInss" class="form-control">
-					</div>
-					<div class="col-md-2">
-						<input type="button" ng-click="incluirEmpresa()">
+		<div class="col-md-12">
+			<div class="row empresasPagadoras">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="col-md-3">
+							<label for="cnpjAIncluir">CNPJ/MF</label>
+							<input 
+							type="text" 
+							class="form-control" 
+							maxlength="18" ui-mask="99.999.999/9999-99" 
+							
+							id="cnpjAIncluir" 
+							ng-model="empresaAIncluir.cnpj"
+							ng-keyup="completeEmpresa()" class="form-control"
+							placeholder="CNPJ/MF" ng-readonly="desabilitarCamposEmpresa" >
+							<ul class="list-group" 
+							ng-model="hideEmpresa" 
+							ng-hide="hideEmpresa">
+							<a class="list-group-item" 
+							href="#" 
+							ng-click="insertLineEmpresa(empresa)" 
+							ng-repeat="empresa in filterEmpresa">
+								{{empresa.numIns}} - {{empresa.razSoc}}
+							</a>
+							</ul>
+							<!-- Testar o REGEX -->
+							<!-- COLOCAR AUTO COMPLETE -->
+						</div>
+						<div class="col-md-9">
+							<label for="nomeAIncluir">Empresa</label>
+							<input maxlength="100" id="nomeAIncluir" 
+							ng-model="empresaAIncluir.nomeEmpresa" class="form-control" ng-readonly="desabilitarCamposEmpresa" >
+						</div>
 					</div>
 				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-12">
-					<table class="tabelaEmpresasIncluir">
-						<<thead>
-							<tr>
-								<th colspan="4">
-									Nome da empresa
-								</th>
-								<th colspan="2">
-									CNPJ/MF
-								</th>
-								<th colspan="2">
-									Valor base para contribuição
-								</th>
-								<th colspan="2">
-									Valor da retenção para o INSS
-								</th>
-								<th colspan="2">
-									Ações
-								</th>
-							</tr>
-						</thead>
-						<<tbody>
-							<tr ng-repeat="empresa in empresasPagadoras">
-								<td>
-									<label ng-model="empresa.nomeEmpresa"></label>
-								</td>
-								<td>
-									<label ng-model="empresa.cnpj"></label>
-								</td>
-								<td>
-									<label ng-model="empresa.valSalarContrib"></label>
-								</td>
-								<td>
-									<label ng-model="empresa.valRetencInss"></label>
-								</td>
-								<td>
-									<input class="botaoRemoverEmpresa" type="button" ng-click="removerEmpresa(empresa.cnpj)">Remover</input>
-								</td>
-							</tr>
-						</tbody>
-						<tfoot>
-							<tr>
-								<td colspan="4">
-								</td>
-								<td colspan="2">
-								</td>
-								<td class="valorNegrito" colspan="2">
-									<label ng-model="somaValoresBaseContrib">
-									</label>
-								</td>
-								<td colspan="2">
-								</td>
-								<td colspan="2">
-								</td>
-							</tr>
-						</tfoot>
-					</table>
+				<div class="row">
+					<div class="col-md-12">
+						<div class="col-md-4">
+							<label for="valSalContrib">Valor do salário de contribuição</label>
+							<input maxlength="10,2" id="valSalContrib" ng-model="empresaAIncluir.valSalarContrib" class="form-control">
+						</div>
+						<div class="col-md-4">
+							<label for="valRetencInss">Valor da retenção para o INSS</label>
+							<input maxlength="10,2" id="valRetencInss" ng-model="empresaAIncluir.valRetencInss" class="form-control">
+						</div>
+						<div class="col-md-2 pull-right">
+							<Button id="btnIncluir" class="btnIncluir pull-right" type="button"  ng-click="incluirEmpresa()">Incluir</Button>
+						</div>
+					</div>
 				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-12">
-					LIMITE MÁXIMO DE CONTRIBUIÇÃO : {{dadosRetencContribPrev.informacoesDatasPermitidas.limCon}}
+				<div class="row">
+					<div class="col-md-12">
+						<table class="tabelaEmpresasIncluir">
+							<thead>
+								<tr>
+									<th colspan="4">
+										Nome da empresa
+									</th>
+									<th colspan="2">
+										CNPJ/MF
+									</th>
+									<th colspan="2">
+										Valor base para contribuição
+									</th>
+									<th colspan="2">
+										Valor da retenção para o INSS
+									</th>
+									<th colspan="2">
+										Ações
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="empresa in empresasPagadoras">
+									<td colspan="4">
+										{{empresa.nomeEmpresa}}
+									</td>
+									<td colspan="2">
+										{{empresa.cnpj}}
+									</td>
+									<td colspan="2">
+										{{empresa.valSalarContrib}}
+									</td>
+									<td colspan="2">
+										{{empresa.valRetencInss}}
+									</td>
+									<td>
+										<input class="botaoRemoverEmpresa" type="button" ng-click="removerEmpresa(empresa.cnpj)">Remover</input>
+									</td>
+								</tr>
+							</tbody>
+							<tfoot>
+								<tr>
+									<td colspan="4">
+									</td>
+									<td colspan="2">
+									</td>
+									<td class="valorNegrito" colspan="2">
+										<label ng-model="somaValoresBaseContrib">
+										</label>
+									</td>
+									<td colspan="2">
+									</td>
+									<td colspan="2">
+									</td>
+								</tr>
+							</tfoot>
+						</table>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						LIMITE MÁXIMO DE CONTRIBUIÇÃO : {{dadosRetencContribPrev.informacoesDatasPermitidas.limCon}}
+					</div>
 				</div>
 			</div>
 		</div>
 		<div class="row">
 			<div class="col-md-12">
 				<div class="col-md-2">
-					<input class="botaoIncluirAnexo"></div>
+					<input type="file" multiple="multiple" name="filefield" class="botaoIncluirAnexo"></div>
 				</div>
 				<div class="col-md-1"></div>
 				<div class="col-md-3">

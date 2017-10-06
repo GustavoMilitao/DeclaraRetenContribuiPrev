@@ -1,6 +1,38 @@
+.tabelaEmpresasIncluir table thead tr th {
+    background-color: #FFA500;
+}
+
 .list-group {
     position: absolute;
     z-index: 1;
+}
+
+.labelParam1 {
+    color : #15CC52;
+}
+
+.btnIncluir {
+    color: black;
+    background-color: #FFA500;
+    border-radius: 3px;
+    width: 100px;
+    margin-top: 30px;
+}
+
+.foto {
+    height: 120px;    
+}
+
+#declarRetencContribPrev input {
+    border-color: #FFA500 !important;
+    border-radius: 0px !important;
+}
+
+.empresasPagadoras {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    border: 2px solid  #FFA500 !important;
+    border-radius: 8px;
 }
 
 #loading {
@@ -102,3 +134,4 @@
     transform: rotate(360deg);
 }
 }
+
