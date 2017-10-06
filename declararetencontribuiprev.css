@@ -11,12 +11,38 @@
     color : #15CC52;
 }
 
-.btnIncluir {
+
+.no-padding-right {
+    padding-right: 0px !important;
+}
+
+.prazoEnvDeclar {
+    margin-bottom: 4%;
+}
+
+.oculto {
+    display: none !important;
+}
+
+.btnAnexo {
+    text-align: center !important;
+    padding-top: 7.5% !important;
+    font-weight: normal !important;
+    cursor: pointer;
+}
+
+.btnAcao {
     color: black;
     background-color: #FFA500;
     border-radius: 3px;
     width: 100px;
+    height: 45px;
     margin-top: 30px;
+}
+
+.botaoRemoverEmpresa {
+    height: 20px !important;
+    margin-top: 10px;
 }
 
 .foto {
@@ -134,4 +160,3 @@
     transform: rotate(360deg);
 }
 }
-

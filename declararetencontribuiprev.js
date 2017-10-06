@@ -79,7 +79,7 @@
 		// 	razSoc : "EMPRESA DE TESTE DO GUGU5"
 		// });
 		$scope.param1 = "Se dados acima incorretos, entrar em contato com sua analista de relacionamento para atualização.";
-		$scope.param2 = "VAI VIR PREENCHIDO";
+		$scope.param2 = "VAI VIR PREENCHIDO {PARAMETRO 2}";
 
 
 		$scope.completeEmpresa = function () {
@@ -97,6 +97,15 @@
 				$scope.hideEmpresa = true;
 			}
 		}
+		
+		$(function() {
+			$('input[type=file]').change(function (){
+				for(var i = 0; i < this.files.length; i++){
+					if(!contemNaLista(this.files[i].name, $scope.anexos))
+			  			$scope.anexos.push(this.files[i].name);
+				}
+			});
+		 });
 
 		$scope.insertLineEmpresa = function (empresa) {
 				if ($scope.contemEmpresaNaLista(empresa.razSoc, $scope.empresasPagadoras)) {
@@ -123,6 +132,16 @@
 			var contem = false;
 			for(var i =0; i < listaEmpresas.length; i++){
 				if(listaEmpresas[i].razSoc === razaoSocial){
+					contem = true;
+				}
+			}
+			return contem;
+		}
+
+		$scope.contemNaLista = function(objeto, objetos){
+			var contem = false;
+			for(var i =0; i < objetos.length; i++){
+				if(objetos[i] === objeto){
 					contem = true;
 				}
 			}
