@@ -11,6 +11,17 @@
     color : #15CC52;
 }
 
+.botaoRemover {
+    background-color: red;
+    border-radius: 10px;
+    height: 20px;
+    width: 20px;
+    text-align: center;
+    color: white;
+    padding-top: 4px;
+    margin-left: 10px;
+    cursor: pointer;
+}
 
 .no-padding-right {
     padding-right: 0px !important;

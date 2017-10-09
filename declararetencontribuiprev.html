@@ -35,8 +35,8 @@
 							<div class="col-md-8">
 								<div class="col-md-5">
 									<label for="cpf">CPF</label>
-									<input maxlength="14" clean="true" mask="999.999.999-99" ng-model="dadosRetencContribPrev.dadosCooperado.numCpf" id="cpf" class="form-control input-borders"
-									 readonly>
+									<input maxlength="14" clean="true" mask="999.999.999-99" ng-model="dadosRetencContribPrev.dadosCooperado.numCpf" id="cpf"
+									 class="form-control input-borders" readonly>
 								</div>
 								<div class="col-md-5">
 									<label for="numInscInss">Número Inscrição INSS</label>
@@ -71,13 +71,13 @@
 			</div>
 			<div class="col-md-12">
 				<div class="row empresasPagadoras">
-					<form ng-submit="incluirEmpresa()">
+					<form ng-submit="adicionarEmpresa()">
 						<div class="row">
 							<div class="col-md-12">
 								<div class="col-md-3">
 									<label for="cnpjAIncluir">CNPJ/MF</label>
-									<input type="text" required class="form-control" maxlength="18" clean="true" mask="99.999.999/9999-99" id="cnpjAIncluir" ng-model="empresaAIncluir.numIns"
-									 ng-keyup="completeEmpresa()" class="form-control" placeholder="CNPJ/MF" ng-readonly="desabilitarCamposEmpresa">
+									<input type="text" required class="form-control" maxlength="18" clean="true" mask="99.999.999/9999-99" id="cnpjAIncluir"
+									 ng-model="empresaAIncluir.numIns" ng-keyup="completeEmpresa()" class="form-control" placeholder="CNPJ/MF" ng-readonly="desabilitarCamposEmpresa">
 									<ul class="list-group" ng-model="hideEmpresa" ng-hide="hideEmpresa">
 										<a class="list-group-item" href="#" ng-click="insertLineEmpresa(empresa)" ng-repeat="empresa in filterEmpresa">
 								{{empresa.numIns}} - {{empresa.razSoc}}
@@ -177,23 +177,25 @@
 			<div class="row">
 				<div class="col-md-12">
 					<div class="col-md-2">
-						<label for="anexar" class="btnAnexo alterarConvenioVoucher btnAcao">
+						<label id="anexo" for="anexar" class="btnAnexo alterarConvenioVoucher btnAcao">
 							Anexo
 						</label>
-						<input ng-upload-change="anexosSelecionados($event)" class="oculto" id="anexar" ng-model="anexos" accept=".pdf,.docx,.doc,.jpg,.png"
+						<input ng-model-instant onchange="angular.element(this).scope().anexosSelecionados(this)" class="oculto" id="anexar" accept=".pdf,.docx,.doc,.jpg,.png"
 						 type="file" multiple="multiple" name="filefield">
 					</div>
 				</div>
 				<div class="col-md-1"></div>
-				<div class="col-md-3">
+				<div class="col-md-6">
 					<div ng-repeat="anexo in anexos" class="row">
-						<label> {{anexo}} </label><span class="removerAnexo(anexo)"></span>
+						<label> {{anexo.name}} </label><span ng-click="removerAnexo(anexo)" class="botaoRemover glyphicon glyphicon-remove"></span>
 						<!-- Pegar nome do arquivo e adicionar na lista 
 							quando decidirem qual modelo de escolha de arquivo usar -->
 					</div>
 				</div>
 			</div>
 		</div>
+		<br>
+		<br>
 		<div class="row">
 			<div class="col-md-12 text-center">
 				<label>
@@ -275,6 +277,7 @@
 		</div>
 	</div>
 	</div>
+
 
 	<script type="text/javascript" src="jquery-1.10.2.js"></script>
 	<script type="text/javascript" src="angular.min.js"></script>

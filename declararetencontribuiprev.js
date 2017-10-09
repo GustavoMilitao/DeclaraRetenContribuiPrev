@@ -6,7 +6,6 @@
 		.controller('DeclaraRetenContribuiPrevController', DeclaraRetenContribuiPrevController);
 	// .config(config);
 
-
 	/** @ngInject */
 
 	/** @ngInject */
@@ -80,15 +79,24 @@
 		// });
 		$scope.param1 = "Se dados acima incorretos, entrar em contato com sua analista de relacionamento para atualização.";
 		$scope.param2 = "VAI VIR PREENCHIDO {PARAMETRO 2}";
-		$scope.incluirEmpresa = function () {
-			$scope.empresasPagadoras.push($scope.empresaAIncluir);
+
+		$scope.adicionarEmpresa = function () {
+			$scope.incluirEmpresa($scope.empresaAIncluir, $scope.empresasPagadoras);
+			$scope.desabilitarCamposEmpresa = false;
 			$scope.empresaAIncluir = {
 				numIns: "",
 				razSoc: "",
 				valSalarContrib: 0.0,
 				valRetencInss: 0.0
 			}
-			$scope.desabilitarCamposEmpresa = false;
+		}
+
+		$scope.incluirEmpresa = function (empresa, lista) {
+			if (contemEmpresaNaLista(empresa.numIns, lista)) {
+				alert(empresa.razSoc + " já adicionada.");
+			} else {
+				lista.push(empresa);
+			}
 		}
 
 		$scope.completeEmpresa = function () {
@@ -113,6 +121,16 @@
 			})
 		}
 
+		$scope.removerAnexo = function(anexo){
+			// $scope.$apply(function ($scope) {
+			// });
+			for (var i = 0; i < $scope.anexos.length; i++) {
+				if ($scope.anexos[i].name === anexo.name) {
+					$scope.anexos.splice(i, 1);
+				}
+			}
+		}
+
 		$scope.removerEmpresa = function (cnpj) {
 			for (var i = 0; i < $scope.empresasPagadoras.length; i++) {
 				if ($scope.empresasPagadoras[i].numIns === cnpj) {
@@ -121,15 +139,18 @@
 			}
 		}
 
-		$scope.anexosSelecionados = function($event) {
-			for (var i = 0; i < this.files.length; i++) {
-				if (!contemNaLista(this.files[i].name, $scope.anexos))
-					$scope.anexos.push(this.files[i].name);
-			}
+		$scope.anexosSelecionados = function (input) {
+			$scope.$apply(function ($scope) {
+				for (var i = 0; i < input.files.length; i++) {
+					if (!contemNaLista(input.files[i].name, $scope.anexos))
+						$scope.anexos.push(input.files[i]);
+				}
+				input.value = '';
+			});
 		}
 
 		$scope.insertLineEmpresa = function (empresa) {
-			if ($scope.contemEmpresaNaLista(empresa.numIns, $scope.empresasPagadoras)) {
+			if (contemEmpresaNaLista(empresa.numIns, $scope.empresasPagadoras)) {
 				alert(empresa.razSoc + " já adicionada.");
 			} else {
 				// empresasPagadoras.push(empresa);
@@ -147,28 +168,6 @@
 				// 	data: team
 				// });
 			}
-		}
-
-		
-
-		$scope.contemEmpresaNaLista = function (cnpj, listaEmpresas) {
-			var contem = false;
-			for (var i = 0; i < listaEmpresas.length; i++) {
-				if (listaEmpresas[i].numIns === cnpj) {
-					contem = true;
-				}
-			}
-			return contem;
-		}
-
-		$scope.contemNaLista = function (objeto, objetos) {
-			var contem = false;
-			for (var i = 0; i < objetos.length; i++) {
-				if (objetos[i] === objeto) {
-					contem = true;
-				}
-			}
-			return contem;
 		}
 
 		var getInicioValidade = function (refIni) {
@@ -202,6 +201,26 @@
 		}
 	}
 
+
+	var contemEmpresaNaLista = function (cnpj, listaEmpresas) {
+		var contem = false;
+		for (var i = 0; i < listaEmpresas.length; i++) {
+			if (listaEmpresas[i].numIns === cnpj) {
+				contem = true;
+			}
+		}
+		return contem;
+	}
+
+	var contemNaLista = function (objeto, objetos) {
+		var contem = false;
+		for (var i = 0; i < objetos.length; i++) {
+			if (objetos[i].name === objeto) {
+				contem = true;
+			}
+		}
+		return contem;
+	}
 
 	// angular.element(document).ready(function() {
 	//   angular.bootstrap(document.getElementById("despesas_plano_de_saude"), ['app.cooperados.despesasPlanoDeSaude']);
