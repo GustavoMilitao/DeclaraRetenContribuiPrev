@@ -7,7 +7,7 @@
 </head>
 
 <body ng-app="app.cooperados.declararetencontribuiprev">
-	<form class="cat-2" ng-controller="DeclaraRetenContribuiPrevController" id="declarRetencContribPrev">
+	<div class="cat-2" ng-controller="DeclaraRetenContribuiPrevController" id="declarRetencContribPrev">
 		<div class="container">
 			<div class="row">
 				<div class="text-center">
@@ -35,7 +35,7 @@
 							<div class="col-md-8">
 								<div class="col-md-5">
 									<label for="cpf">CPF</label>
-									<input maxlength="14" mask="999.999.999-99" ng-model="dadosRetencContribPrev.dadosCooperado.numCpf" id="cpf" class="form-control input-borders"
+									<input maxlength="14" clean="true" mask="999.999.999-99" ng-model="dadosRetencContribPrev.dadosCooperado.numCpf" id="cpf" class="form-control input-borders"
 									 readonly>
 								</div>
 								<div class="col-md-5">
@@ -62,50 +62,52 @@
 			<div class="row">
 				<div class="col-md-3">
 					<label for="mesInicialRef">Mês inicial de Referência</label>
-					<input mask="99/9999" id="mesInicialRef" ng-model="mesInicialRef" class="form-control">
+					<input mask="12/9999" restrict="reject" id="mesInicialRef" ng-model="mesInicialRef" class="form-control">
 				</div>
 				<div class="col-md-3">
 					<label for="mesFinalRef">Mês final de Referência</label>
-					<input mask="99/9999" id="mesFinalRef" ng-model="mesFinalRef" class="form-control">
+					<input restrict="reject" mask="12/9999" id="mesFinalRef" ng-model="mesFinalRef" class="form-control">
 				</div>
 			</div>
 			<div class="col-md-12">
 				<div class="row empresasPagadoras">
-					<div class="row">
-						<div class="col-md-12">
-							<div class="col-md-3">
-								<label for="cnpjAIncluir">CNPJ/MF</label>
-								<input type="text" class="form-control" maxlength="18" mask="99.999.999/9999-99" id="cnpjAIncluir" ng-model="empresaAIncluir.numIns"
-								 ng-keyup="completeEmpresa()" class="form-control" placeholder="CNPJ/MF" ng-readonly="desabilitarCamposEmpresa">
-								<ul class="list-group" ng-model="hideEmpresa" ng-hide="hideEmpresa">
-									<a class="list-group-item" href="#" ng-click="insertLineEmpresa(empresa)" ng-repeat="empresa in filterEmpresa">
+					<form ng-submit="incluirEmpresa()">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="col-md-3">
+									<label for="cnpjAIncluir">CNPJ/MF</label>
+									<input type="text" required class="form-control" maxlength="18" clean="true" mask="99.999.999/9999-99" id="cnpjAIncluir" ng-model="empresaAIncluir.numIns"
+									 ng-keyup="completeEmpresa()" class="form-control" placeholder="CNPJ/MF" ng-readonly="desabilitarCamposEmpresa">
+									<ul class="list-group" ng-model="hideEmpresa" ng-hide="hideEmpresa">
+										<a class="list-group-item" href="#" ng-click="insertLineEmpresa(empresa)" ng-repeat="empresa in filterEmpresa">
 								{{empresa.numIns}} - {{empresa.razSoc}}
 							</a>
-								</ul>
-								<!-- Testar o REGEX -->
-								<!-- COLOCAR AUTO COMPLETE -->
-							</div>
-							<div class="col-md-9">
-								<label for="nomeAIncluir">Empresa</label>
-								<input maxlength="100" id="nomeAIncluir" ng-model="empresaAIncluir.razSoc" class="form-control" ng-readonly="desabilitarCamposEmpresa">
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-12">
-							<div class="col-md-4">
-								<label for="valSalContrib">Valor do salário de contribuição</label>
-								<input maxlength="10"  id="valSalContrib" ng-model="empresaAIncluir.valSalarContrib" class="form-control">
-							</div>
-							<div class="col-md-4">
-								<label for="valRetencInss">Valor da retenção para o INSS</label>
-								<input maxlength="10,2" id="valRetencInss" ng-model="empresaAIncluir.valRetencInss" class="form-control">
-							</div>
-							<div class="col-md-2 pull-right">
-								<Button id="btnIncluir" class="btnAcao alterarConvenioVoucher pull-right" type="button" ng-click="incluirEmpresa()">Incluir</Button>
+									</ul>
+									<!-- Testar o REGEX -->
+									<!-- COLOCAR AUTO COMPLETE -->
+								</div>
+								<div class="col-md-9">
+									<label for="nomeAIncluir">Empresa</label>
+									<input maxlength="100" required id="nomeAIncluir" ng-model="empresaAIncluir.razSoc" class="form-control" ng-readonly="desabilitarCamposEmpresa">
+								</div>
 							</div>
 						</div>
-					</div>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="col-md-4">
+									<label for="valSalContrib">Valor do salário de contribuição</label>
+									<input required maxlength="10" id="valSalContrib" ng-model="empresaAIncluir.valSalarContrib" class="form-control">
+								</div>
+								<div class="col-md-4">
+									<label for="valRetencInss">Valor da retenção para o INSS</label>
+									<input required maxlength="10,2" id="valRetencInss" ng-model="empresaAIncluir.valRetencInss" class="form-control">
+								</div>
+								<div class="col-md-2 pull-right">
+									<Button type="submit" id="btnIncluir" class="btnAcao alterarConvenioVoucher pull-right" type="button">Incluir</Button>
+								</div>
+							</div>
+						</div>
+					</form>
 					<div class="col-md-12">
 						<div id="pontuacao">
 
@@ -178,7 +180,8 @@
 						<label for="anexar" class="btnAnexo alterarConvenioVoucher btnAcao">
 							Anexo
 						</label>
-						<input class="oculto" id="anexar" ng-model="anexos" accept=".pdf,.docx,.doc" type="file" multiple="multiple" name="filefield">
+						<input ng-upload-change="anexosSelecionados($event)" class="oculto" id="anexar" ng-model="anexos" accept=".pdf,.docx,.doc,.jpg,.png"
+						 type="file" multiple="multiple" name="filefield">
 					</div>
 				</div>
 				<div class="col-md-1"></div>
@@ -199,7 +202,7 @@
 			</div>
 		</div>
 		<div class="col-md-12">
-			<input type="checkbox" class="pull-left checkboxLiAceito">
+			<input ng-model="liEAceito" type="checkbox" class="pull-left checkboxLiAceito">
 			<div class="col-md-2 liAceitoLabel">
 				<label>
 				Li e aceito
@@ -260,7 +263,7 @@
 			</div>
 		</div>
 		<div class="col-md-12">
-			<Button ng-click="enviarDeclaracao()" class="alterarConvenioVoucher btnAcao col-md-2 pull-right">
+			<Button ng-disabled="!liEAceito" ng-click="enviarDeclaracao()" class="alterarConvenioVoucher btnAcao col-md-2 pull-right">
 					Enviar declaração
 				</Button>
 			<Button ng-click="visualizarDeclaracao()" class="alterarConvenioVoucher btnAcao col-md-2 pull-right">
@@ -270,14 +273,14 @@
 					Cancelar
 				</Button>
 		</div>
-		</div>
-		</div>
+	</div>
+	</div>
 
-		<script type="text/javascript" src="jquery-1.10.2.js"></script>
-		<script type="text/javascript" src="angular.min.js"></script>
-		<script type="text/javascript" src="angucomplete-alt.min.js"></script>
-		<script type="text/javascript" src="ngMask.js"></script>
-		<script type="text/javascript" src="declararetencontribuiprev.js"></script>
+	<script type="text/javascript" src="jquery-1.10.2.js"></script>
+	<script type="text/javascript" src="angular.min.js"></script>
+	<script type="text/javascript" src="angucomplete-alt.min.js"></script>
+	<script type="text/javascript" src="ngMask.js"></script>
+	<script type="text/javascript" src="declararetencontribuiprev.js"></script>
 
 
 

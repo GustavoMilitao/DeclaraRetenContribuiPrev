@@ -9,7 +9,6 @@
 
 	/** @ngInject */
 
-
 	/** @ngInject */
 	// function config($routeProvider){
 	//     $routeProvider
@@ -38,6 +37,7 @@
 		$scope.mesFInalRefData = null;
 		$scope.empresasPagadoras = [{ razSoc: "TESTE", numIns: "1", valSalarContrib: "0", valRetencInss: "0" }];
 		$scope.anexos = [];
+		$scope.liEAceito = false;
 		$scope.empresaAIncluir = {
 			cnpj: "",
 			nomeEmpresa: "",
@@ -107,20 +107,24 @@
 			}
 		}
 
-		$(function () {
-			$('input[type=file]').change(function () {
-				for (var i = 0; i < this.files.length; i++) {
-					if (!contemNaLista(this.files[i].name, $scope.anexos))
-						$scope.anexos.push(this.files[i].name);
-				}
-			});
-		});
+		$scope.unificarAnexos = function () {
+			$scope.anexos = $scope.anexos.filter(function (elem, index, self) {
+				return index == self.indexOf(elem);
+			})
+		}
 
-		$scope.removerEmpresa = function(cnpj){
-			for(var i =0; i < $scope.empresasPagadoras.length; i++ ){
-				if($scope.empresasPagadoras[i].numIns === cnpj){
-					$scope.empresasPagadoras.splice(i,1);
+		$scope.removerEmpresa = function (cnpj) {
+			for (var i = 0; i < $scope.empresasPagadoras.length; i++) {
+				if ($scope.empresasPagadoras[i].numIns === cnpj) {
+					$scope.empresasPagadoras.splice(i, 1);
 				}
+			}
+		}
+
+		$scope.anexosSelecionados = function($event) {
+			for (var i = 0; i < this.files.length; i++) {
+				if (!contemNaLista(this.files[i].name, $scope.anexos))
+					$scope.anexos.push(this.files[i].name);
 			}
 		}
 
@@ -144,6 +148,8 @@
 				// });
 			}
 		}
+
+		
 
 		$scope.contemEmpresaNaLista = function (cnpj, listaEmpresas) {
 			var contem = false;
