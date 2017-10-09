@@ -75,7 +75,7 @@
 						<div class="col-md-12">
 							<div class="col-md-3">
 								<label for="cnpjAIncluir">CNPJ/MF</label>
-								<input type="text" class="form-control" maxlength="18" mask="99.999.999/9999-99" id="cnpjAIncluir" ng-model="empresaAIncluir.cnpj"
+								<input type="text" class="form-control" maxlength="18" mask="99.999.999/9999-99" id="cnpjAIncluir" ng-model="empresaAIncluir.numIns"
 								 ng-keyup="completeEmpresa()" class="form-control" placeholder="CNPJ/MF" ng-readonly="desabilitarCamposEmpresa">
 								<ul class="list-group" ng-model="hideEmpresa" ng-hide="hideEmpresa">
 									<a class="list-group-item" href="#" ng-click="insertLineEmpresa(empresa)" ng-repeat="empresa in filterEmpresa">
@@ -87,7 +87,7 @@
 							</div>
 							<div class="col-md-9">
 								<label for="nomeAIncluir">Empresa</label>
-								<input maxlength="100" id="nomeAIncluir" ng-model="empresaAIncluir.nomeEmpresa" class="form-control" ng-readonly="desabilitarCamposEmpresa">
+								<input maxlength="100" id="nomeAIncluir" ng-model="empresaAIncluir.razSoc" class="form-control" ng-readonly="desabilitarCamposEmpresa">
 							</div>
 						</div>
 					</div>
@@ -95,7 +95,7 @@
 						<div class="col-md-12">
 							<div class="col-md-4">
 								<label for="valSalContrib">Valor do salário de contribuição</label>
-								<input maxlength="10,2" id="valSalContrib" ng-model="empresaAIncluir.valSalarContrib" class="form-control">
+								<input maxlength="10"  id="valSalContrib" ng-model="empresaAIncluir.valSalarContrib" class="form-control">
 							</div>
 							<div class="col-md-4">
 								<label for="valRetencInss">Valor da retenção para o INSS</label>
@@ -130,10 +130,10 @@
 									</tr>
 									<tr ng-repeat="empresa in empresasPagadoras">
 										<td colspan="4">
-											{{empresa.nomeEmpresa}}
+											{{empresa.razSoc}}
 										</td>
 										<td colspan="2">
-											{{empresa.cnpj}}
+											{{empresa.numIns}}
 										</td>
 										<td colspan="2">
 											{{empresa.valSalarContrib}}
@@ -142,7 +142,7 @@
 											{{empresa.valRetencInss}}
 										</td>
 										<td class="no-padding-right">
-											<Button class="pull-right alterarConvenioVoucher btnAcao" type="button" ng-click="removerEmpresa(empresa.cnpj)">Remover</Button>
+											<Button class="pull-right alterarConvenioVoucher btnAcao" type="button" ng-click="removerEmpresa(empresa.numIns)">Remover</Button>
 										</td>
 									</tr>
 									<tfoot>
@@ -231,7 +231,7 @@
 								{{historico.datMov}}
 							</td>
 							<td>
-								{{historico.cmpIni}} {{-}} {{historico.cmpFim}}
+								{{historico.cmpIni}} - {{historico.cmpFim}}
 							</td>
 							<td>
 								{{getInicioValidade(historico.cmpIni)}}
@@ -273,11 +273,11 @@
 		</div>
 		</div>
 
-		<script src="angular.min.js"></script>
-		<script src="angucomplete-alt.min.js"></script>
-		<script src="ngMask.js"></script>
-		<script src="declararetencontribuiprev.js"></script>
-		<script src="jquery-1.10.2.js"></script>
+		<script type="text/javascript" src="jquery-1.10.2.js"></script>
+		<script type="text/javascript" src="angular.min.js"></script>
+		<script type="text/javascript" src="angucomplete-alt.min.js"></script>
+		<script type="text/javascript" src="ngMask.js"></script>
+		<script type="text/javascript" src="declararetencontribuiprev.js"></script>
 
 
 
