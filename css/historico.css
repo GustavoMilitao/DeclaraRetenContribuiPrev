@@ -1,0 +1,82 @@
+.empresasPagadoras table {
+    margin-bottom: 15px;
+}
+
+.empresasPagadoras table th {
+    border-bottom: solid 1px #fff;
+}
+.empresasPagadoras table td {
+    padding: 0 !important;
+}
+
+.contribuicao-group {
+    position: relative;
+    padding: 0;
+    width: 100%;
+    margin-left: 0;
+}
+
+.contribuicao-group .linha-contribuicao {
+    background-color: lightgray;
+    margin: 0;
+}
+
+.contribuicao-group .empresa {
+    display: none;
+}
+
+.contribuicao-group .linha-contribuicao,
+.contribuicao-group .empresa .cell {
+    padding: 8px 0;
+}
+
+
+
+.contribuicao-group .empresa .cell {
+    background-color: rgba(228, 215, 190, 0.45);
+    padding-left: 5px;
+    padding-right: 5px;
+    border-right: solid 1px #fff;
+    border-bottom: solid 1px #fff;
+}
+
+.contribuicao-group .empresa .cell:first-child {
+    text-align: left;
+}
+
+
+.contribuicao-group a,
+.contribuicao-group a:link,
+.contribuicao-group a:visited {
+    color: #5B5C65;
+}
+
+.contribuicao-group .row {
+    margin: 0;
+}
+
+.contribuicao-group a span.active {
+    background: transparent;
+    color: #F5781E;
+}
+
+.contribuicao-group .empresa {
+    background: #fff;
+}
+
+
+.width50pc{
+    width:25%;
+    float: left;
+}
+
+.cabecalhoTabela {
+    background-color: #F5781E;
+    color: white;
+    padding: 8px;
+    height: 36px;
+}
+
+.empresasPagadoras {
+    padding-bottom: 15px;
+}
