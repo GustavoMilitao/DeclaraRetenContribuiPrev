@@ -321,20 +321,25 @@
 			}
 			return false;
 		}
-	}
 
-	$scope.tratarPermissaoEnvioDeclaracao = function(){
-		if (new Date() > $scope.getDataFimInc()) { //RN 08
-			$scope.desabilitaEnvio = true;
-			alert("Prazo para envio da declaração encerrado em " + $scope.dadosRetencContribPrev.informacoesDatasPermitidas.fimInc);
-		}
-		else {
-			if (new Date() < $scope.getDataInicioInc()) { // RN 09
-				$scope.desabilitaEnvio = true;
-				alert("Declaração de Retenção de contribuição previdenciária poderá ser enviada a partir do dia " + $scope.dadosRetencContribPrev.informacoesDatasPermitidas.iniInc);
-			}
-		}
-	}
+        $scope.tratarPermissaoEnvioDeclaracao = function(){
+            if (new Date() > $scope.getDataFimInc()) { //RN 08
+                $scope.desabilitaEnvio = true;
+                alert("Prazo para envio da declaração encerrado em " + $scope.dadosRetencContribPrev.informacoesDatasPermitidas.fimInc);
+            }
+            else {
+                if (new Date() < $scope.getDataInicioInc()) { // RN 09
+                    $scope.desabilitaEnvio = true;
+                    alert("Declaração de Retenção de contribuição previdenciária poderá ser enviada a partir do dia " + $scope.dadosRetencContribPrev.informacoesDatasPermitidas.iniInc);
+                }
+            }
+        }
+
+        angular.element(document).ready(function () {
+            $scope.tratarPermissaoEnvioDeclaracao();
+        });
+    }
+
 
 	function a (){
 			if ($scope.jaEnviadaHoje()) { // RN 10
@@ -349,9 +354,6 @@
 			}
 	}
 
-	angular.element(document).ready(function () {
-		$scope.tratarPermissaoEnvioDeclaracao();
-	});
 })();
 
 var getInicioValidade = function (refIni) {
