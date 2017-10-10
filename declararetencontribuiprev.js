@@ -2,7 +2,10 @@
 	'use strict';
 
 	angular
-		.module('app.cooperados.declararetencontribuiprev', ['ngMask']/*['app.cooperados.service', 'ngRoute']*/)
+		.module('app.cooperados.declararetencontribuiprev', ['ngMask']/*['app.cooperados.service', 'ngRoute']*/
+		,['$qProvider', function ($qProvider){
+			$qProvider.errorOnUnhandledRejections(false);
+		}])
 		.controller('DeclaraRetenContribuiPrevController', DeclaraRetenContribuiPrevController);
 	// .config(config);
 
@@ -26,9 +29,38 @@
 
 	// }
 
+
 	/** @ngInject */
-	function DeclaraRetenContribuiPrevController($scope/*,cooperados,consultarCooperado*/) {
+	function DeclaraRetenContribuiPrevController($scope, $http/*,cooperados,consultarCooperado*/) {
 		
+
+		$scope.getDadosCooperado = function(){
+			var urlAcesso = "";
+
+			$http({
+				method : "GET",
+				url : "https://areadocolaboradordesv.unimedbh.com.br/portalrh/conector?SIS=FP&LOGIN=SID&ACAO=EXESENHA&NOMUSU=webservice_INSSCoop&SENUSU=abc123"
+			}).then(function(response){
+				var acesso = response.data;
+				var urlGetDados = "https://areadocolaboradordesv.unimedbh.com.br/portalrh/conector?ACAO=EXECUTAREGRA&SIS=FP&REGRA=456&metodo=buscaDadosInciais&numEmp=3&numCad="
+				+"3"+"&listaDeclaracoes=S&listaCNPJ=S&USER=webservice_INSSCoop&CONNECTION="+acesso;
+
+				$http({
+					method : "GET",
+					headers: {
+						'Content-Type': 'text/html'
+					},
+					url : urlGetDados
+				}).then(function(response){
+					$scope.dadosRetencContribPrev = response.data;
+				}, function myError(response) {
+					console.log(response.statusText);
+				});
+			});
+
+		}
+		$scope.getDadosCooperado();
+
 		$scope.limparTela = function(){
 			$scope.refIni = "";
 			$scope.refFin = "";
