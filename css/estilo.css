@@ -3204,3 +3204,11 @@ button.ui-button.ui-corner-all.ui-widget {
 .topo .margem #divFaleConosco p#botaoFaleConosco a {
     line-height: 12px!important;
 }
+
+a.showHidePagadoras {
+    text-decoration: none;
+}
+
+a.showHidePagadoras:hover {
+    color: #F5781E;
+}

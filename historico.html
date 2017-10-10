@@ -1,0 +1,93 @@
+<html ng-app="app">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/declararetencontribuiprev.css">
+    <link rel="stylesheet" type="text/css" href="css/estilo.css">
+    <link rel="stylesheet" type="text/css" href="css/historico.css">
+</head>
+
+<body ng-controller="HistoricoController">
+
+
+<div class="cat-2" id="declarRetencContribPrev">
+    <div class="container">
+        <div class="row">
+            <div class="text-center">
+                HISTÓRICO DECLARAÇÃO DE RETENÇÃO CONTRIBUIÇÃO PREVIDENCIÁRIA
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div class="row empresasPagadoras">
+
+                <div class="">
+                    <div id="pontuacao">
+                        <div class="col-md-8">
+                            <div class="cabecalhoTabela" width="100%">
+                                <div id="dtEnvio" class="width50pc">
+                                    <span>Data de Envio</span>
+                                </div>
+                                <div id="periodoReferencia" class="width50pc">
+                                    <span>Período de Referência</span>
+                                </div>
+                                <div id="dtInicioValidade" class="width50pc">
+                                    <span>Data Início Validade</span>
+                                </div>
+                                <div id="dtFimValidade" class="width50pc">
+                                    <span>Data Fim Validade</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="linha">
+                                <div class="row contribuicao-group" ng-repeat="(key, row) in historicoList">
+                                    <div class="row linha-contribuicao">
+
+                                        <div class="col-md-2">
+                                            <a href="#" class="showHidePagadoras" id="declaracao_{{ key + 1 }}">
+                                                <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                                            </a>
+                                            {{ row.dataInicio }}
+                                        </div>
+
+                                        <div ng-bind="row.periodoVigencia" class="col-md-2"></div>
+                                        <div ng-bind="row.inicioValidade" class="col-md-2"></div>
+                                        <div ng-bind="row.fimValidade" class="col-md-2"></div>
+
+                                    </div>
+
+                                    <div class="empresa" id="declaracao_{{ key + 1 }}_alvo">
+                                        <!-- Lista empresas pagadoras -->
+                                        <div class="row" ng-repeat="empresa in row.empresasPagadoras">
+
+                                            <div class="col-md-5 cell" ng-bind="empresa.nomeEmpresa"></div>
+                                            <div class="col-md-3 cell" ng-bind="empresa.cnpj"></div>
+                                            <div class="col-md-2 cell" ng-bind="empresa.valorSalario"></div>
+                                            <div class="col-md-2 cell" ng-bind="empresa.valorRetencao"></div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p>* Declaração finalizada pelo RH da Unimed-BH. Dúvidas entre em contato com sua analista de relacionamento.</p>
+    </div>
+
+</div>
+
+
+<script type="text/javascript" src="js/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="js/angular.min.js"></script>
+<script type="text/javascript" src="js/historico.js"></script>
+
+
+</body>
+
+</html>

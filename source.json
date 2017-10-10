@@ -1,0 +1,42 @@
+[
+  {
+    "dataInicio": "01/02/2017",
+    "periodoVigencia": "02/17 - 05/17",
+    "inicioValidade": "31/05/2017",
+    "fimValidade": "05/06/2017",
+    "empresasPagadoras": [
+      {
+        "nomeEmpresa": "Unimed BH",
+        "cnpj": "36.273.135/0001-78",
+        "valorSalario": "9.999,00",
+        "valorRetencao": "9.999,00"
+      },
+      {
+        "nomeEmpresa": "Algar Tech",
+        "cnpj": "80.762.750/0001-30",
+        "valorSalario": "9.999,00",
+        "valorRetencao": "9.999,00"
+      }
+    ]
+  },
+  {
+    "dataInicio": "01/02/2017",
+    "periodoVigencia": "02/17 - 05/17",
+    "inicioValidade": "31/05/2017",
+    "fimValidade": "05/06/2017",
+    "empresasPagadoras": [
+      {
+        "nomeEmpresa": "Algar Telecom",
+        "cnpj": "47.963.442/0001-05",
+        "valorSalario": "9.999,00",
+        "valorRetencao": "9.999,00"
+      },
+      {
+        "nomeEmpresa":"Algar Agro",
+        "cnpj":"61.572.594/0001-08",
+        "valorSalario": "9.999,00",
+        "valorRetencao": "9.999,00"
+      }
+    ]
+  }
+]
