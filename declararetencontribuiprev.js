@@ -30,13 +30,10 @@
 	function DeclaraRetenContribuiPrevController($scope/*,cooperados,consultarCooperado*/) {
 
 		/* Objetos utilizados na inclusão atual */
+		/* Tela */
 		$scope.mesInicialRef = "";
 		$scope.mesFinalRef = "";
-		$scope.mesInicialRefData = null;
-		$scope.mesFInalRefData = null;
-		$scope.empresasPagadoras = [
-			{ razSoc: "TESTE", numIns: "1", valSalarContrib: "0", valRetencInss: "0" }
-		];
+		$scope.empresasPagadoras = [];
 		$scope.anexos = [];
 		$scope.liEAceito = false;
 		$scope.empresaAIncluir = {
@@ -45,18 +42,26 @@
 			valSalarContrib: 0.0,
 			valRetencInss: 0.0
 		}
-		$scope.somaValoresRetencInss;
+		$scope.somaValoresRetencInss = 0;
 		$scope.filterEmpresa = [];
 		$scope.hideEmpresa = true;
 		$scope.desabilitarCamposEmpresa = false;
+		$scope.desabilitaEnvio = false;
+		/* Fim dados Tela */
+
+		/* Dados cooperado */
+		$scope.dadosRetencContribPrev = {};
+		/* Fim dados cooperado */
 		/* ------------------------------- */
 
-		$scope.dadosRetencContribPrev = {};
+		/* MOCKS */
 		$scope.dadosRetencContribPrev.informacoesDatasPermitidas = {};
-		$scope.dadosRetencContribPrev.informacoesDatasPermitidas.fimInc = "11/11/2011";
+		$scope.dadosRetencContribPrev.informacoesDatasPermitidas.fimInc = "11/11/2018";
+		$scope.dadosRetencContribPrev.informacoesDatasPermitidas.iniInc = "01/10/2017";
 		$scope.dadosRetencContribPrev.dadosCooperado = {};
 		$scope.dadosRetencContribPrev.dadosCooperado.fotEmp = "http://www.gettyimages.com/gi-resources/images/Embed/new/embed2.jpg";
 		$scope.dadosRetencContribPrev.listaCNPJ = [];
+		$scope.dadosRetencContribPrev.declaracoesIncluidas_cmpIni_cmpFim = [];
 		for (var i = 0; i < 1000; i++) {
 			$scope.dadosRetencContribPrev.listaCNPJ.push({
 				numIns: "1122333444555",
@@ -67,23 +72,30 @@
 		$scope.param1 = "Se dados acima incorretos, entrar em contato com sua analista de relacionamento para atualização.";
 		$scope.param2 = "VAI VIR PREENCHIDO {PARAMETRO 2}";
 
+		$scope.dadosRetencContribPrev.informacoesDatasPermitidas.limCon = 5000;
+
+		/* FIM DOS MOCKS */
+
 		$scope.adicionarEmpresa = function () {
-			if (!$scope.empresaAIncluir.cnpj || $scope.empresaAIncluir.cnpj == "" ||
+			if (!$scope.empresaAIncluir.numIns || $scope.empresaAIncluir.numIns == "" ||
 				!$scope.empresaAIncluir.valSalarContrib || $scope.empresaAIncluir.valSalarContrib == 0) {
-					alert("Obrigatório informar o CNPJ e Valor do Salário de Contribuição!");
+				alert("Obrigatório informar o CNPJ e Valor do Salário de Contribuição!");
 			}
-			//Validar CNPJ.
-			if ($scope.empresaAIncluir.valRetencInss > $scope.empresaAIncluir.valSalarContrib) {
-				alert("Valor de retenção do INSS deverá ser inferior ou igual ao valor do salário de contribuição!");
-			}
-			$scope.incluirEmpresa($scope.empresaAIncluir, $scope.empresasPagadoras);
-			$scope.desabilitarCamposEmpresa = false;
-			$scope.somaValoresRetencInss += $scope.empresaAIncluir.valRetencInss;
-			$scope.empresaAIncluir = {
-				numIns: "",
-				razSoc: "",
-				valSalarContrib: 0.0,
-				valRetencInss: 0.0
+			else {
+				//Validar CNPJ.
+				if (parseFloat($scope.empresaAIncluir.valRetencInss) > parseFloat($scope.empresaAIncluir.valSalarContrib)) {
+					alert("Valor de retenção do INSS deverá ser inferior ou igual ao valor do salário de contribuição!");
+				} else {
+					$scope.incluirEmpresa($scope.empresaAIncluir, $scope.empresasPagadoras);
+					$scope.desabilitarCamposEmpresa = false;
+					$scope.somaValoresRetencInss += parseFloat($scope.empresaAIncluir.valRetencInss);
+					$scope.empresaAIncluir = {
+						numIns: "",
+						razSoc: "",
+						valSalarContrib: 0.0,
+						valRetencInss: 0.0
+					}
+				}
 			}
 		}
 
@@ -199,12 +211,12 @@
 		}
 
 		angular.element(document).ready(function () {
-			if (new Date() > getDataFimInc()) {
+			if (new Date() > $scope.getDataFimInc()) {
 				$scope.desabilitaEnvio = true;
 				alert("Prazo para envio da declaração encerrado em " + $scope.dadosRetencContribPrev.informacoesDatasPermitidas.fimInc);
 			}
 			else {
-				if (new Date() < getDataInicioInc()) {
+				if (new Date() < $scope.getDataInicioInc()) {
 					$scope.desabilitaEnvio = true;
 					alert("Declaração de Retenção de contribuição previdenciária poderá ser enviada a partir do dia " + $scope.dadosRetencContribPrev.informacoesDatasPermitidas.iniInc);
 				}
@@ -257,8 +269,8 @@
 			var anoFim = splitDtFinRef[1];
 			var mesIni = splitDtIniRef[1];
 			var mesFim = splitDtFinRef[1];
-			var dataIni = new Date(parseInt(anoIni), parseInt(mesIni));
-			var dataFim = new Date(parseInt(anoFim), parseInt(mesFim));
+			var dataIni = new Date(parseInt(anoIni), parseInt(mesIni) - 1);
+			var dataFim = new Date(parseInt(anoFim), parseInt(mesFim) - 1);
 			if (dataFim > dataIni) {
 				return true;
 			}
@@ -301,7 +313,7 @@
 			var ano = split[2];
 			var mes = split[1];
 			var dia = split[0];
-			var dataLimite = new Date(parseInt(ano), parseInt(mes), parseInt(dia));
+			var dataLimite = new Date(parseInt(ano), parseInt(mes) - 1, parseInt(dia));
 			return dataLimite;
 		}
 
@@ -310,7 +322,7 @@
 			var ano = split[2];
 			var mes = split[1];
 			var dia = split[0];
-			var dataLimite = new Date(parseInt(ano), parseInt(mes), parseInt(dia));
+			var dataLimite = new Date(parseInt(ano), parseInt(mes) - 1, parseInt(dia));
 			return dataLimite;
 		}
 
@@ -322,7 +334,7 @@
 					var ano = split[2];
 					var mes = split[1];
 					var dia = split[0];
-					var data = new Date(parseInt(ano), parseInt(mes), parseInt(dia));
+					var data = new Date(parseInt(ano), parseInt(mes) - 1, parseInt(dia));
 					if (data === new Date()) {
 						return true;
 					}

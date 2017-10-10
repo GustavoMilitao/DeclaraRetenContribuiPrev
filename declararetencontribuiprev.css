@@ -37,9 +37,14 @@
 
 .btnAnexo {
     text-align: center !important;
-    padding-top: 7.5% !important;
+    padding-top: 4.5% !important;
     font-weight: normal !important;
     cursor: pointer;
+}
+
+.btnAnexoDesativado {
+    background-color: #d1cee4 !important;
+    cursor: default !important;
 }
 
 .btnAcao {

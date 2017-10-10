@@ -153,11 +153,11 @@
 											</td>
 											<td colspan="2">
 											</td>
-											<td class="valorNegrito" colspan="2">
-												<label ng-model="somaValoresBaseContrib">
-														</label>
-											</td>
 											<td colspan="2">
+											</td>
+											<td class="valorNegrito" colspan="2">
+												<label>{{somaValoresRetencInss}}
+												</label>
 											</td>
 											<td colspan="2">
 											</td>
@@ -177,10 +177,10 @@
 			<div class="row">
 				<div class="col-md-12">
 					<div class="col-md-2">
-						<label id="anexo" for="anexar" class="btnAnexo alterarConvenioVoucher btnAcao">
+						<label id="anexo" for="anexar" ng-class="{'btnAnexoDesativado' : !liEAceito }" class="btnAnexo alterarConvenioVoucher btnAcao">
 							Anexar arquivo
 						</label>
-						<input ng-model-instant onchange="angular.element(this).scope().anexosSelecionados(this)" class="oculto" id="anexar" accept=".pdf,.docx,.doc,.jpg,.png"
+						<input ng-disabled="!liEAceito" ng-model-instant onchange="angular.element(this).scope().anexosSelecionados(this)" class="oculto" id="anexar" accept=".pdf,.docx,.doc,.jpg,.png"
 						 type="file" multiple="multiple" name="filefield">
 					</div>
 				</div>
@@ -267,9 +267,6 @@
 		<div class="col-md-12">
 			<Button ng-disabled="!liEAceito" ng-click="enviarDeclaracao()" class="alterarConvenioVoucher btnAcao col-md-2 pull-right">
 					Enviar declaração
-				</Button>
-			<Button ng-click="visualizarDeclaracao()" class="alterarConvenioVoucher btnAcao col-md-2 pull-right">
-					Visualizar Declaração
 				</Button>
 			<Button ng-click="cancelar()" class="alterarConvenioVoucher btnAcao col-md-2 pull-right">
 					Cancelar
