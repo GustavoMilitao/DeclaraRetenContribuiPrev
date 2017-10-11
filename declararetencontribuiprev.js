@@ -241,20 +241,32 @@
 			//Se o campo estiver vazio não há nada a ser validado
 			if($scope.refIni.length == 0) return;
 
+			var refIniArr = $scope.refIni.split('/');
+
+			//Verifica se o mês do período é válido
+            if(refIniArr[0] < 1 || refIniArr[0] > 12) {
+                alert("O mês do período deve estar entre 1 e 12!");
+                $scope.refIni = '';
+                $('#refIni').focus();
+                return;
+            }
+
 
             var dataAtual = new Date();
 
             var diaLimite = $scope.dadosRetencContribPrev.informacoesDatasPermitidas.diaLim;
 
             if(!$scope.isAnoCorrente($scope.refIni)) {
-                $scope.refIni = '';
                 alert("Mês inicial de referência deverá ser dentro do ano corrente!");
+                $scope.refIni = '';
                 $('#refIni').focus();
             } else if($scope.isCompetenciaAnterior()) {
                 alert("Não é permitido o lançamento de declarações com competência inicial inferior à competência atual!");
+                $scope.refIni = '';
                 $('#refIni').focus();
             } else if($scope.isCompetenciaAtual() && dataAtual.getDate() > diaLimite) {
 				alert("Data limite para envio da declaração do mês corrente ultrapassada!");
+                $scope.refIni = '';
                 $('#refIni').focus();
 			}
 
@@ -266,15 +278,28 @@
             //Se o campo estiver vazio não há nada a ser validado
             if($scope.refFin.length == 0) return;
 
-            if(!$scope.isAnoCorrente($scope.refFin)) {
+            var refFimArr = $scope.refFin.split('/');
+
+            //Verifica se o mês do período é válido
+            if(refFimArr[0] < 1 || refFimArr[0] > 12) {
+                alert("O mês do período deve estar entre 1 e 12!");
                 $scope.refFin = '';
+                $('#refFin').focus();
+                return;
+            }
+
+
+
+            if(!$scope.isAnoCorrente($scope.refFin)) {
                 alert("Mês final de referência deverá ser dentro do ano corrente!");
+                $scope.refFin = '';
+                $('#refFin').focus();
             }
 
 
             if($scope.isRefFinalMaior($scope.refIni, $scope.refFin)) {
-                $scope.refFin = '';
                 alert("Mês final de referência deverá ser anterior ou igual ao mês ano inicial de referência!");
+                $scope.refFin = '';
                 $('#refFin').focus();
 			}
 
@@ -292,7 +317,6 @@
 			if(mes == dataAtual.getMonth() + 1 && ano == dataAtual.getFullYear()) {
 				return true;
 			} else {
-                $scope.refIni = '';
 				return false;
 			}
 
@@ -308,13 +332,11 @@
             var dataAtual = new Date();
 
             if(ano < dataAtual.getFullYear()) {
-                $scope.refIni = '';
             	return true;
             }
 
 
             if(mes < (dataAtual.getMonth() + 1)) {
-                $scope.refIni = '';
                 return true;
             }
 
