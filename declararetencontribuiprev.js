@@ -15,8 +15,8 @@
 	// 	templateUrl: '/js/cooperado/unimedbh/declararetencontribuiprev/declararetencontribuiprev.html',
 	// 	controller: 'DeclaraRetenContribuiPrevController as vm',
 	// 	resolve:{
-	// 		consultarCooperado:function(cooperados){                   
-	//              return cooperados.consultarCooperado();                                            
+	// 		consultarCooperado:function(cooperados){
+	//              return cooperados.consultarCooperado();
 	//         }
 	// 	}
 	//     })
@@ -73,6 +73,9 @@
 		$scope.param2 = "VAI VIR PREENCHIDO {PARAMETRO 2}";
 
 		$scope.dadosRetencContribPrev.informacoesDatasPermitidas.limCon = 5000;
+
+        $scope.dadosRetencContribPrev.informacoesDatasPermitidas.diaLim = 11;
+
 
 		/* FIM DOS MOCKS */
 
@@ -189,68 +192,91 @@
 
 
 		$scope.tratarInicioReferencia = function () {
-			var dataAtual = new Date();
-			if ($scope.inicioRefEhAnoAtual()) {
-				if (dataAtual.getDate() >
-					parseInt($scope.dadosRetencContribPrev.informacoesDatasPermitidas.diaLim)) {
-					$scope.desabilitaEnvio = true;
-					alert("Data limite para envio da declaração do mês corrente ultrapassada!");
-				}
+
+			//Se o campo estiver vazio não há nada a ser validado
+			if($scope.refIni.length == 0) return;
+
+
+            var dataAtual = new Date();
+
+            console.log();
+
+
+            if(!$scope.isAnoCorrente()) {
+                alert("Mês inicial de referência deverá ser dentro do ano corrente!");
+            } else if($scope.isCompetenciaAnterior()) {
+                alert("Não é permitido o lançamento de declarações com competência inicial inferior à competência atual!");
+            } else if($scope.isCompetenciaAtual()
+                    && dataAtual.getDate() > $scope.dadosRetencContribPrev.informacoesDatasPermitidas.diaLim) {
+				alert("Data limite para envio da declaração do mês corrente ultrapassada!");
 			}
-			else {
-				if($scope.inicioRefEhMenorCompetenciaAtual()){
-					alert("Não é permitido o lançamento de declarações com competência inicial inferior à competência atual.");
-					$scope.desabilitaEnvio = true;
-				}
-			}
-			if (!$scope.inicioRefEhAnoAtual()) {
-				alert("Mês inicial de referência deverá ser dentro do ano corrente!");
-				$scope.refIni = "";
-			}
-			if (!$scope.fimRefEhAnoAtual()) {
-				alert("Mês final de referência deverá ser dentro do ano corrente!");
-				$scope.refFinRef = "";
-			}
-			if ($scope.fimRefEhMaiorIniRef()) {
-				alert("Mês final de referência deverá ser posterior ou igual ao mês ano inicial de referência!");
-				$scope.refFinRef = "";
-			}
+
+
 		}
 
-		$scope.fimRefEhMaiorIniRef = function () {
-			var splitDtFinRef = $scope.refFin.split("/");
+
+		$scope.isCompetenciaAtual = function() {
+
 			var splitDtIniRef = $scope.refIni.split("/");
-			var anoIni = splitDtIniRef[1];
-			var anoFim = splitDtFinRef[1];
-			var mesIni = splitDtIniRef[1];
-			var mesFim = splitDtFinRef[1];
-			var dataIni = new Date(parseInt(anoIni), parseInt(mesIni) - 1);
-			var dataFim = new Date(parseInt(anoFim), parseInt(mesFim) - 1);
-			if (dataFim > dataIni) {
-				return true;
-			}
-			return false;
-		}
 
-		$scope.fimRefEhAnoAtual = function () {
-			var splitDtFinRef = $scope.refFin.split("/");
-			var ano = splitDtFinRef[1];
-			var dataAtual = new Date();
-			if (ano == dataAtual.getFullYear()) {
-				return true;
-			}
-			return false;
-		}
-
-		$scope.inicioRefEhAnoAtual = function () {
-			var splitDtIniRef = $scope.refIni.split("/");
+			var mes = splitDtIniRef[0];
 			var ano = splitDtIniRef[1];
+
 			var dataAtual = new Date();
-			if (ano == dataAtual.getFullYear()) {
+
+			if(mes == dataAtual.getMonth() + 1 && ano == dataAtual.getFullYear()) {
 				return true;
+			} else {
+                $scope.refIni = '';
+				return false;
 			}
-			return false;
+
 		}
+
+        $scope.isCompetenciaAnterior = function() {
+
+            var splitDtIniRef = $scope.refIni.split("/");
+
+            var mes = splitDtIniRef[0];
+            var ano = splitDtIniRef[1];
+
+            var dataAtual = new Date();
+
+            if(ano < dataAtual.getFullYear()) {
+                $scope.refIni = '';
+            	return true;
+            }
+
+
+            if(mes < (dataAtual.getMonth() + 1)) {
+                $scope.refIni = '';
+                return true;
+            }
+
+
+            return false;
+
+        }
+
+
+		$scope.isAnoCorrente = function() {
+
+            var dataAtual = new Date();
+
+
+            var splitDtIniRef = $scope.refIni.split("/");
+
+            var ano = splitDtIniRef[1];
+
+            if(ano != dataAtual.getFullYear()) {
+                $scope.refIni = '';
+            	return false;
+			}
+
+			return true;
+
+		}
+
 
 		$scope.diaLimiteJaPassou = function(dia){
 			var splitDtIniRef = $scope.refIni.split("/");
@@ -264,28 +290,6 @@
 			return false;
 		}
 
-		$scope.inicioRefEhAnoAtual = function () {
-			var splitDtIniRef = $scope.refIni.split("/");
-			var ano = splitDtIniRef[1];
-			var mes = splitDtIniRef[0];
-			var dataAtual = new Date();
-			if (ano == dataAtual.getFullYear() && mes == dataAtual.getMonth()) {
-				return true;
-			}
-			return false;
-		}
-
-		$scope.inicioRefEhMenorCompetenciaAtual = function () {
-			var splitDtIniRef = $scope.refIni.split("/");
-			var ano = splitDtIniRef[1];
-			var mes = splitDtIniRef[0];
-			var dataAtual = new Date();
-			var dataRefIni = new Date(parseInt(ano), parseInt(mes));
-			if (dataAtual > dataRefIni) {
-				return true;
-			}
-			return false;
-		}
 
 		$scope.getDataFimInc = function () {
 			var split = $scope.dadosRetencContribPrev.informacoesDatasPermitidas.fimInc.split("/");
