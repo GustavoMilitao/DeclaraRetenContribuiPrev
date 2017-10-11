@@ -110,26 +110,9 @@
 		/* ------------------------------- */
 
 		/* MOCKS */
-		$scope.dadosRetencContribPrev.informacoesDatasPermitidas = {};
-		$scope.dadosRetencContribPrev.informacoesDatasPermitidas.fimInc = "11/11/2018";
-		$scope.dadosRetencContribPrev.informacoesDatasPermitidas.iniInc = "01/10/2017";
-		$scope.dadosRetencContribPrev.dadosCooperado = {};
-		$scope.dadosRetencContribPrev.dadosCooperado.fotEmp = "http://www.gettyimages.com/gi-resources/images/Embed/new/embed2.jpg";
-		$scope.dadosRetencContribPrev.listaCNPJ = [];
-		$scope.dadosRetencContribPrev.declaracoesIncluidas_cmpIni_cmpFim = [];
-		for (var i = 0; i < 1000; i++) {
-			$scope.dadosRetencContribPrev.listaCNPJ.push({
-				numIns: "1122333444555",
-				razSoc: "EMPRESA DE TESTE DO GUGU1"
-			});
-		}
 
 		$scope.param1 = "Se dados acima incorretos, entrar em contato com sua analista de relacionamento para atualização.";
 		$scope.param2 = "VAI VIR PREENCHIDO {PARAMETRO 2}";
-
-		$scope.dadosRetencContribPrev.informacoesDatasPermitidas.limCon = 5000;
-
-        $scope.dadosRetencContribPrev.informacoesDatasPermitidas.diaLim = 11;
 
 		$ = window.jQuery;
 
@@ -240,6 +223,12 @@
 				var r = confirm("Confirma a retenção dos valores de INSS no período de "+ $scope.refIni +" a "+$scope.refIni+" via outras fontes pagadoras informada?");
 				if (r == true) {
 					$scope.lerAnexos();
+					// Tentativa de envio de declaração.
+					// ver se tem falha
+					// se tiver falha, verificar codigo.
+					// codigo constante.ErroDeclEnv
+					// Envia novamente com o parâmetro sobrepor=s na url.
+					// Mandar mensagem de sucesso.
 				} else {
 					$scope.limparTela();
 				}
