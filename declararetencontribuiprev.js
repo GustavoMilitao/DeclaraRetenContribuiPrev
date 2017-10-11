@@ -2,7 +2,10 @@
 	'use strict';
 
 	angular
-		.module('app.cooperados.declararetencontribuiprev', ['ngMask']/*['app.cooperados.service', 'ngRoute']*/)
+		.module('app.cooperados.declararetencontribuiprev', ['ngMask']/*['app.cooperados.service', 'ngRoute']*/
+		,['$qProvider', function ($qProvider){
+			$qProvider.errorOnUnhandledRejections(false);
+		}])
 		.controller('DeclaraRetenContribuiPrevController', DeclaraRetenContribuiPrevController);
 	// .config(config);
 
@@ -26,27 +29,60 @@
 
 	// }
 
-	/** @ngInject */
-	function DeclaraRetenContribuiPrevController($scope/*,cooperados,consultarCooperado*/) {
 
+	/** @ngInject */
+	function DeclaraRetenContribuiPrevController($scope, $http/*,cooperados,consultarCooperado*/) {
+		
+
+		$scope.getDadosCooperado = function(){
+			var urlAcesso = "";
+
+			$http({
+				method : "GET",
+				url : "https://areadocolaboradordesv.unimedbh.com.br/portalrh/conector?SIS=FP&LOGIN=SID&ACAO=EXESENHA&NOMUSU=webservice_INSSCoop&SENUSU=abc123"
+			}).then(function(response){
+				var acesso = response.data;
+				var urlGetDados = "https://areadocolaboradordesv.unimedbh.com.br/portalrh/conector?ACAO=EXECUTAREGRA&SIS=FP&REGRA=456&metodo=buscaDadosInciais&numEmp=3&numCad="
+				+"3"+"&listaDeclaracoes=S&listaCNPJ=S&USER=webservice_INSSCoop&CONNECTION="+acesso;
+
+				$http({
+					method : "GET",
+					headers: {
+						'Content-Type': 'text/html'
+					},
+					url : urlGetDados
+				}).then(function(response){
+					$scope.dadosRetencContribPrev = response.data;
+				}, function myError(response) {
+					console.log(response.statusText);
+				});
+			});
+
+		}
+		$scope.getDadosCooperado();
+
+		$scope.limparTela = function(){
+			$scope.refIni = "";
+			$scope.refFin = "";
+			$scope.empresasPagadoras = [];
+			$scope.anexos = [];
+			$scope.liEAceito = false;
+			$scope.empresaAIncluir = {
+				cnpj: "",
+				nomeEmpresa: "",
+				valSalarContrib: 0.0,
+				valRetencInss: 0.0
+			}
+			$scope.ArrayArquivoEmBytes = [];
+			$scope.somaValoresRetencInss = 0;
+			$scope.filterEmpresa = [];
+			$scope.hideEmpresa = true;
+			$scope.desabilitarCamposEmpresa = false;
+			$scope.desabilitaEnvio = false;
+		}
 		/* Objetos utilizados na inclusão atual */
 		/* Tela */
-		$scope.refIni = "";
-		$scope.refFin = "";
-		$scope.empresasPagadoras = [];
-		$scope.anexos = [];
-		$scope.liEAceito = false;
-		$scope.empresaAIncluir = {
-			cnpj: "",
-			nomeEmpresa: "",
-			valSalarContrib: 0.0,
-			valRetencInss: 0.0
-		}
-		$scope.somaValoresRetencInss = 0;
-		$scope.filterEmpresa = [];
-		$scope.hideEmpresa = true;
-		$scope.desabilitarCamposEmpresa = false;
-		$scope.desabilitaEnvio = false;
+		$scope.limparTela();
 		/* Fim dados Tela */
 
 		/* Dados cooperado */
@@ -180,16 +216,23 @@
 		}
 
 		$scope.enviarDeclaracao = function () {
-			//VALIDAÇÕES DE ENVIO DE DECLARAÇÃO.
 			if ($scope.somaValoresRetencInss >= $scope.dadosRetencContribPrev.informacoesDatasPermitidas.limCon) {
 				var txt;
 				var r = confirm("Confirma a retenção dos valores de INSS no período de "+ $scope.refIni +" a "+$scope.refIni+" via outras fontes pagadoras informada?");
 				if (r == true) {
-					//Enviar declaração.
+					$scope.lerAnexos();
 				} else {
-					//Limpar tela
+					$scope.limparTela();
 				}
 			}
+		}
+
+		$scope.lerAnexos = function(){
+			var reader = new FileReader();
+			reader.onload = function(event) {
+				ArrayArquivoEmBytes.push(event.target.result);
+			}
+			reader.readAsText(file);
 		}
 
 
@@ -366,24 +409,23 @@
 			return false;
 		}
 
-        $scope.tratarPermissaoEnvioDeclaracao = function(){
-            if (new Date() > $scope.getDataFimInc()) { //RN 08
-                $scope.desabilitaEnvio = true;
-                alert("Prazo para envio da declaração encerrado em " + $scope.dadosRetencContribPrev.informacoesDatasPermitidas.fimInc);
-            }
-            else {
-                if (new Date() < $scope.getDataInicioInc()) { // RN 09
-                    $scope.desabilitaEnvio = true;
-                    alert("Declaração de Retenção de contribuição previdenciária poderá ser enviada a partir do dia " + $scope.dadosRetencContribPrev.informacoesDatasPermitidas.iniInc);
-                }
-            }
-        }
+		$scope.tratarPermissaoEnvioDeclaracao = function(){
+			if (new Date() > $scope.getDataFimInc()) { //RN 08
+				$scope.desabilitaEnvio = true;
+				alert("Prazo para envio da declaração encerrado em " + $scope.dadosRetencContribPrev.informacoesDatasPermitidas.fimInc);
+			}
+			else {
+				if (new Date() < $scope.getDataInicioInc()) { // RN 09
+					$scope.desabilitaEnvio = true;
+					alert("Declaração de Retenção de contribuição previdenciária poderá ser enviada a partir do dia " + $scope.dadosRetencContribPrev.informacoesDatasPermitidas.iniInc);
+				}
+			}
+		}
 
-        angular.element(document).ready(function () {
-            $scope.tratarPermissaoEnvioDeclaracao();
-        });
-    }
-
+		angular.element(document).ready(function () {
+			$scope.tratarPermissaoEnvioDeclaracao();
+		});
+	}
 
 	function a (){
 			if ($scope.jaEnviadaHoje()) { // RN 10
@@ -397,7 +439,6 @@
 				}
 			}
 	}
-
 })();
 
 var getInicioValidade = function (refIni) {
