@@ -32,34 +32,52 @@
 
 	/** @ngInject */
 	function DeclaraRetenContribuiPrevController($scope, $http/*,cooperados,consultarCooperado*/) {
-		
 
-		$scope.getDadosCooperado = function(){
+		$scope.getDadosCooperado = function(crm){
 			var urlAcesso = "";
 
 			$http({
 				method : "GET",
-				url : "https://areadocolaboradordesv.unimedbh.com.br/portalrh/conector?SIS=FP&LOGIN=SID&ACAO=EXESENHA&NOMUSU=webservice_INSSCoop&SENUSU=abc123"
+				url : "https://areadocolaboradordesv.unimedbh.com.br/portalrh/conector?"+
+				"SIS=FP&"+
+				"LOGIN=SID&"+
+				"ACAO=EXESENHA&"+
+				"NOMUSU=webservice_INSSCoop&"+
+				"SENUSU=abc123"
 			}).then(function(response){
 				var acesso = response.data;
-				var urlGetDados = "https://areadocolaboradordesv.unimedbh.com.br/portalrh/conector?ACAO=EXECUTAREGRA&SIS=FP&REGRA=456&metodo=buscaDadosInciais&numEmp=3&numCad="
-				+"3"+"&listaDeclaracoes=S&listaCNPJ=S&USER=webservice_INSSCoop&CONNECTION="+acesso;
+				var urlGetDadosCooperado = 
+				"https://areadocolaboradordesv.unimedbh.com.br/portalrh/conector?" +
+				"ACAO=EXECUTAREGRA&"+
+				"SIS=FP&"+
+				"REGRA=456&"+
+				"metodo=buscaDadosInciais&"+
+				"numEmp=3&"+
+				"numCad="+crm+"&"+
+				"listaDeclaracoes=S&"+
+				"listaCNPJ=S&"+
+				"USER=webservice_INSSCoop&"+
+				"CONNECTION="+acesso;
 
 				$http({
 					method : "GET",
-					headers: {
-						'Content-Type': 'text/html'
-					},
-					url : urlGetDados
+					url : urlGetDadosCooperado,
 				}).then(function(response){
-					$scope.dadosRetencContribPrev = response.data;
+					if(response.data.falha){
+						alert(response.data.falha.erroExecucao);
+						$scope.desabilitaEnvio = true;
+					}
+					else{
+						$scope.dadosRetencContribPrev = response.data;
+						$scope.carregando = false;
+					}
 				}, function myError(response) {
 					console.log(response.statusText);
 				});
 			});
 
 		}
-		$scope.getDadosCooperado();
+		$scope.getDadosCooperado(7007);
 
 		$scope.limparTela = function(){
 			$scope.refIni = "";
@@ -79,6 +97,7 @@
 			$scope.hideEmpresa = true;
 			$scope.desabilitarCamposEmpresa = false;
 			$scope.desabilitaEnvio = false;
+			$scope.carregando = true;
 		}
 		/* Objetos utilizados na inclusão atual */
 		/* Tela */
@@ -447,6 +466,47 @@
 		angular.element(document).ready(function () {
 			$scope.tratarPermissaoEnvioDeclaracao();
 		});
+
+				$scope.historicoList = [];
+		
+				
+				$ = window.jQuery;
+		
+		
+				$(document).on('click', '.showHidePagadoras', function(e) {
+		
+					e.preventDefault();
+		
+					var alvo = $('#' + this.id + '_alvo');
+		
+					if($(alvo).is(':visible')) {
+		
+						$(alvo).hide();
+		
+						$(this).find('span')
+							.removeClass('glyphicon-minus-sign')
+							.removeClass('active')
+							.addClass('glyphicon-plus-sign');
+		
+					} else {
+						$(alvo).fadeIn();
+		
+						$(this).find('span')
+							.removeClass('glyphicon-plus-sign')
+							.addClass('glyphicon-minus-sign')
+							.addClass('active');
+					}
+		
+		
+				});
+				$http({
+					method: 'GET',
+					url: 'source.json'
+				}).then(function(response) {
+					$scope.historicoList = response.data;
+					console.log(response.data);
+		
+				})
 	}
 
 	function a (){
