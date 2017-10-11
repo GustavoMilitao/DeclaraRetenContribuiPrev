@@ -38,28 +38,10 @@
 
 			$http({
 				method : "GET",
-				url : "https://areadocolaboradordesv.unimedbh.com.br/portalrh/conector?"+
-				"SIS=FP&"+
-				"LOGIN=SID&"+
-				"ACAO=EXESENHA&"+
-				"NOMUSU=webservice_INSSCoop&"+
-				"SENUSU=abc123"
+				url : $scope.getUrlAutenticacao()
 			}).then(function(response){
 				var acesso = response.data;
-				var urlGetDadosCooperado = 
-				"https://areadocolaboradordesv.unimedbh.com.br/portalrh/conector?" +
-				"ACAO=EXECUTAREGRA&"+
-				"SIS=FP&"+
-				"REGRA=456&"+
-				"metodo=buscaDadosInciais&"+
-				"numEmp=3&"+
-				"numCad="+crm+"&"+
-				"listaDeclaracoes=S&"+
-				"listaCNPJ=S&"+
-				"USER=webservice_INSSCoop&"+
-				"CONNECTION="+acesso+"&" +
-				"listaFoto=N";
-
+				var urlGetDadosCooperado = $scope.getUrlDadosCooperado(crm, acesso);
 				$http({
 					method : "GET",
 					url : urlGetDadosCooperado,
@@ -78,6 +60,22 @@
 			});
 
 		}
+
+		$scope.getUrlDadosCooperado = function(crm, acesso){
+			"https://areadocolaboradordesv.unimedbh.com.br/portalrh/conector?" +
+			"ACAO=EXECUTAREGRA&"+
+			"SIS=FP&"+
+			"REGRA=456&"+
+			"metodo=buscaDadosInciais&"+
+			"numEmp=3&"+
+			"numCad="+crm+"&"+
+			"listaDeclaracoes=S&"+
+			"listaCNPJ=S&"+
+			"USER=webservice_INSSCoop&"+
+			"CONNECTION="+acesso+"&" +
+			"listaFoto=N";
+		}
+
 		$scope.getDadosCooperado(7007);
 
 		$scope.limparTela = function(){
@@ -233,10 +231,92 @@
 					// codigo constante.ErroDeclEnv
 					// Envia novamente com o parâmetro sobrepor=s na url.
 					// Mandar mensagem de sucesso.
+					incluirDeclaracao($scope.dadosRetencContribPrev.refIni,
+									  $scope.dadosRetencContribPrev.refFin,
+									  $scope.dadosRetencContribPrev.empresasPagadoras,
+									  $scope.dadosRetencContribPrev.dadosCooperado.numCad);
 				} else {
 					$scope.limparTela();
 				}
+			}else{
+				$scope.lerAnexos();
+				// Tentativa de envio de declaração.
+				// ver se tem falha
+				// se tiver falha, verificar codigo.
+				// codigo constante.ErroDeclEnv
+				// Envia novamente com o parâmetro sobrepor=s na url.
+				// Mandar mensagem de sucesso.
+				incluirDeclaracao($scope.dadosRetencContribPrev.refIni,
+								  $scope.dadosRetencContribPrev.refFin,
+								  $scope.dadosRetencContribPrev.empresasPagadoras,
+								  $scope.dadosRetencContribPrev.dadosCooperado.numCad);
 			}
+		}
+
+		$scope.incluirDeclaracao = function(refIni, refFin, empresasPagadoras, crm){
+			$http({
+				method : "GET",
+				url : $scope.getUrlAutenticacao()
+			}).then(function(response){
+				var acesso = response.data;
+				$http({
+					method : "POST",
+					url : $scope.getUrlIncluirDeclaracao(refIni, refFin, empresasPagadoras, crm, acesso)
+				}).then(function(response){
+					if(response.data.falha){
+						if(response.data.falha.status === "0"){
+							var txt;
+							var r = confirm(response.data.falha.erroExecucao);
+							if (r == true) {
+								$http({
+									method : "POST",
+									url : $scope.getUrlIncluirDeclaracao(refIni, refFin, empresasPagadoras, crm, acesso, true),
+								}).then(function(response){
+									alert("Envio concluído com sucesso!");
+								});
+							}
+						}
+						else{
+							alert(response.data.falha.erroExecucao);
+						}
+					}
+					else{
+						alert("Envio concluído com sucesso!");
+					}
+				}, function myError(response) {
+					console.log(response.statusText);
+				});
+			});
+		}
+
+
+		$scope.getUrlIncluirDeclaracao = function(refIni, refFin, empresasPagadoras, crm, acesso, sobrepor){
+			var urlGetDadosCooperado = "https://areadocolaboradordesv.unimedbh.com.br/portalrh/conector?" +
+			"ACAO=EXECUTAREGRA&"+
+			"SIS=FP&"+
+			"REGRA=456&"+
+			"metodo=incluirDeclaracao&"+
+			"qtdDeclaracao="+ empresasPagadoras.length +
+			"numCad="+crm+"&";
+			for(var i = 0; i < empresasPagadoras.length; i++){
+				urlGetDadosCooperado += "dadosDeclaracao_"+(i+1)+"=";
+				urlGetDadosCooperado += (refIni+
+										 refFin+
+										 empresasPagadoras[i].cnpj+
+										 empresasPagadoras[i].valSalarContrib+
+										 empresasPagadoras[i].valRetencInss)+"&";
+			}
+			urlGetDadosCooperado += "USER=webservice_INSSCoop&CONNECTION="+acesso;
+			return sobrepor ? urlGetDadosCooperado + "&sobrepor=S" : urlGetDadosCooperado;
+		}
+
+		$scope.getUrlAutenticacao = function(){
+			return "https://areadocolaboradordesv.unimedbh.com.br/portalrh/conector?"+
+			"SIS=FP&"+
+			"LOGIN=SID&"+
+			"ACAO=EXESENHA&"+
+			"NOMUSU=webservice_INSSCoop&"+
+			"SENUSU=abc123";
 		}
 
 		$scope.lerAnexos = function(){
@@ -502,19 +582,6 @@
 					var dias = getNumDiasMes(mesEAno[0],mesEAno[1]);
 					return dias + "/" + refFim;
 				}
-	}
-
-	function a (){
-			if ($scope.jaEnviadaHoje()) { // RN 10
-				var txt;
-				var r = confirm("Declaração de retenção de contribuição previdenciária já foi enviada na data de hoje. Deseja Substituir?");
-				if (r == true) {
-					// Excluir declaração enviada.
-					//RN19 (Dúvida, tirar com Elayne)
-				} else {
-					$scope.desabilitaEnvio = true;
-				}
-			}
 	}
 })();
 
