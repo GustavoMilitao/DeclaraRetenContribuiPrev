@@ -57,7 +57,8 @@
 				"listaDeclaracoes=S&"+
 				"listaCNPJ=S&"+
 				"USER=webservice_INSSCoop&"+
-				"CONNECTION="+acesso;
+				"CONNECTION="+acesso+"&" +
+				"listaFoto=N";
 
 				$http({
 					method : "GET",
@@ -106,6 +107,9 @@
 
 		/* Dados cooperado */
 		$scope.dadosRetencContribPrev = {};
+		$scope.dadosRetencContribPrev.informacoesDatasPermitidas = {};
+		$scope.dadosRetencContribPrev.informacoesDatasPermitidas.fimInc = "";
+		$scope.dadosRetencContribPrev.informacoesDatasPermitidas.iniInc = "";
 		/* Fim dados cooperado */
 		/* ------------------------------- */
 
@@ -488,14 +492,16 @@
 		
 		
 				});
-				$http({
-					method: 'GET',
-					url: 'source.json'
-				}).then(function(response) {
-					$scope.historicoList = response.data;
-					console.log(response.data);
-		
-				})
+
+				$scope.getInicioValidade = function (refIni) {
+					return "01/" + refIni;
+				}
+				
+				$scope.getFimValidade = function (refFim) {
+					var mesEAno = refFim.split("/");
+					var dias = getNumDiasMes(mesEAno[0],mesEAno[1]);
+					return dias + "/" + refFim;
+				}
 	}
 
 	function a (){
@@ -512,32 +518,22 @@
 	}
 })();
 
-var getInicioValidade = function (refIni) {
-	return "01/" + refIni;
-}
-
-var getFimValidade = function (refFim) {
-	var mesEAno = refFim.split("/");
-	var dias = getNumDiasMes(mesEAno[0].mesEAno[1]);
-	return dias + "/" + refFim;
-}
-
 var getNumDiasMes = function (mes, ano) {
 
 	var ehBissexto = ((ano % 4 == 0) && (ano % 100 != 0)) || (ano % 400 == 0);
 	switch (mes) {
-		case 1: return 31;
-		case 2: return ehBissexto ? 29 : 28;
-		case 3: return 31;
-		case 4: return 30;
-		case 5: return 31;
-		case 6: return 30;
-		case 7: return 31;
-		case 8: return 31;
-		case 9: return 30;
-		case 10: return 31;
-		case 11: return 30;
-		case 12: return 31;
+		case "01": return 31;
+		case "02": return ehBissexto ? 29 : 28;
+		case "03": return 31;
+		case "04": return 30;
+		case "05": return 31;
+		case "06": return 30;
+		case "07": return 31;
+		case "08": return 31;
+		case "09": return 30;
+		case "10": return 31;
+		case "11": return 30;
+		case "12": return 31;
 	}
 }
 

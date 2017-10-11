@@ -248,29 +248,28 @@
 								<div class="clear-float"></div>
 								<div class="col-md-12">
 									<div class="linha">
-										<div class="row contribuicao-group" ng-repeat="(key, row) in historicoList">
+										<div class="row contribuicao-group" ng-repeat="(key, row) in dadosRetencContribPrev.declaracoesIncluidas">
 											<div class="row linha-contribuicao">
 
 												<div class="col-md-2">
 													<a href="#" class="showHidePagadoras" id="declaracao_{{ key + 1 }}">
 														<span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
-													</a> {{ row.dataInicio }}
+													</a> {{ row.datMov }}
 												</div>
 
-												<div ng-bind="row.periodoVigencia" class="col-md-2"></div>
-												<div ng-bind="row.inicioValidade" class="col-md-2"></div>
-												<div ng-bind="row.fimValidade" class="col-md-2"></div>
-
+												<div class="col-md-2"> {{row.cmpIni}} - {{row.cmpFim}} </div>
+												<div ng-bind="getInicioValidade(row.cmpIni)" class="col-md-2">  </div>
+												<div ng-bind="getFimValidade(row.cmpFim)" class="col-md-2"> </div>
 											</div>
 
 											<div class="empresa" id="declaracao_{{ key + 1 }}_alvo">
 												<!-- Lista empresas pagadoras -->
 												<div class="row" ng-repeat="empresa in row.empresasPagadoras">
 
-													<div class="col-md-5 cell" ng-bind="empresa.nomeEmpresa"></div>
-													<div class="col-md-3 cell" ng-bind="empresa.cnpj"></div>
-													<div class="col-md-2 cell" ng-bind="empresa.valorSalario"></div>
-													<div class="col-md-2 cell" ng-bind="empresa.valorRetencao"></div>
+													<div class="col-md-5 cell" ng-bind="empresa.nomOem"></div>
+													<div class="col-md-3 cell" ng-bind="empresa.numIns"></div>
+													<div class="col-md-2 cell" ng-bind="empresa.bmeIns"></div>
+													<div class="col-md-2 cell" ng-bind="empresa.vmeIns"></div>
 
 												</div>
 
