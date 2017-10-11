@@ -33,6 +33,16 @@
 	/** @ngInject */
 	function DeclaraRetenContribuiPrevController($scope, $http/*,cooperados,consultarCooperado*/) {
 
+
+		$scope.getUrlAutenticacao = function(){
+			return "https://areadocolaboradordesv.unimedbh.com.br/portalrh/conector?"+
+			"SIS=FP&"+
+			"LOGIN=SID&"+
+			"ACAO=EXESENHA&"+
+			"NOMUSU=webservice_INSSCoop&"+
+			"SENUSU=abc123";
+		}
+
 		$scope.getDadosCooperado = function(crm){
 			var urlAcesso = "";
 
@@ -62,7 +72,7 @@
 		}
 
 		$scope.getUrlDadosCooperado = function(crm, acesso){
-			"https://areadocolaboradordesv.unimedbh.com.br/portalrh/conector?" +
+			return "https://areadocolaboradordesv.unimedbh.com.br/portalrh/conector?" +
 			"ACAO=EXECUTAREGRA&"+
 			"SIS=FP&"+
 			"REGRA=456&"+
@@ -219,6 +229,15 @@
 			});
 		}
 
+
+		$scope.lerAnexos = function(){
+			var reader = new FileReader();
+			reader.onload = function(event) {
+				ArrayArquivoEmBytes.push(event.target.result);
+			}
+			reader.readAsText(file);
+		}
+
 		$scope.enviarDeclaracao = function () {
 			if ($scope.somaValoresRetencInss >= $scope.dadosRetencContribPrev.informacoesDatasPermitidas.limCon) {
 				var txt;
@@ -251,6 +270,26 @@
 								  $scope.dadosRetencContribPrev.empresasPagadoras,
 								  $scope.dadosRetencContribPrev.dadosCooperado.numCad);
 			}
+		}
+
+		$scope.getUrlIncluirDeclaracao = function(refIni, refFin, empresasPagadoras, crm, acesso, sobrepor){
+			var urlGetDadosCooperado = "https://areadocolaboradordesv.unimedbh.com.br/portalrh/conector?" +
+			"ACAO=EXECUTAREGRA&"+
+			"SIS=FP&"+
+			"REGRA=456&"+
+			"metodo=incluirDeclaracao&"+
+			"qtdDeclaracao="+ empresasPagadoras.length +
+			"numCad="+crm+"&";
+			for(var i = 0; i < empresasPagadoras.length; i++){
+				urlGetDadosCooperado += "dadosDeclaracao_"+(i+1)+"=";
+				urlGetDadosCooperado += (refIni+
+										 refFin+
+										 empresasPagadoras[i].cnpj+
+										 empresasPagadoras[i].valSalarContrib+
+										 empresasPagadoras[i].valRetencInss)+"&";
+			}
+			urlGetDadosCooperado += "USER=webservice_INSSCoop&CONNECTION="+acesso;
+			return sobrepor ? urlGetDadosCooperado + "&sobrepor=S" : urlGetDadosCooperado;
 		}
 
 		$scope.incluirDeclaracao = function(refIni, refFin, empresasPagadoras, crm){
@@ -287,44 +326,6 @@
 					console.log(response.statusText);
 				});
 			});
-		}
-
-
-		$scope.getUrlIncluirDeclaracao = function(refIni, refFin, empresasPagadoras, crm, acesso, sobrepor){
-			var urlGetDadosCooperado = "https://areadocolaboradordesv.unimedbh.com.br/portalrh/conector?" +
-			"ACAO=EXECUTAREGRA&"+
-			"SIS=FP&"+
-			"REGRA=456&"+
-			"metodo=incluirDeclaracao&"+
-			"qtdDeclaracao="+ empresasPagadoras.length +
-			"numCad="+crm+"&";
-			for(var i = 0; i < empresasPagadoras.length; i++){
-				urlGetDadosCooperado += "dadosDeclaracao_"+(i+1)+"=";
-				urlGetDadosCooperado += (refIni+
-										 refFin+
-										 empresasPagadoras[i].cnpj+
-										 empresasPagadoras[i].valSalarContrib+
-										 empresasPagadoras[i].valRetencInss)+"&";
-			}
-			urlGetDadosCooperado += "USER=webservice_INSSCoop&CONNECTION="+acesso;
-			return sobrepor ? urlGetDadosCooperado + "&sobrepor=S" : urlGetDadosCooperado;
-		}
-
-		$scope.getUrlAutenticacao = function(){
-			return "https://areadocolaboradordesv.unimedbh.com.br/portalrh/conector?"+
-			"SIS=FP&"+
-			"LOGIN=SID&"+
-			"ACAO=EXESENHA&"+
-			"NOMUSU=webservice_INSSCoop&"+
-			"SENUSU=abc123";
-		}
-
-		$scope.lerAnexos = function(){
-			var reader = new FileReader();
-			reader.onload = function(event) {
-				ArrayArquivoEmBytes.push(event.target.result);
-			}
-			reader.readAsText(file);
 		}
 
 
