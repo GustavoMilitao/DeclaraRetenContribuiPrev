@@ -80,3 +80,7 @@
 .empresasPagadoras {
     padding-bottom: 15px;
 }
+
+.clear-float {
+    clear: both;
+}

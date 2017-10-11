@@ -53,7 +53,7 @@
 				"REGRA=456&"+
 				"metodo=buscaDadosInciais&"+
 				"numEmp=3&"+
-				"numCad="+crm+"&"
+				"numCad="+crm+"&"+
 				"listaDeclaracoes=S&"+
 				"listaCNPJ=S&"+
 				"USER=webservice_INSSCoop&"+
@@ -69,6 +69,7 @@
 					}
 					else{
 						$scope.dadosRetencContribPrev = response.data;
+						$scope.carregando = false;
 					}
 				}, function myError(response) {
 					console.log(response.statusText);
@@ -96,6 +97,7 @@
 			$scope.hideEmpresa = true;
 			$scope.desabilitarCamposEmpresa = false;
 			$scope.desabilitaEnvio = false;
+			$scope.carregando = true;
 		}
 		/* Objetos utilizados na inclusão atual */
 		/* Tela */
@@ -431,8 +433,6 @@
 		
 		
 				});
-		
-		
 				$http({
 					method: 'GET',
 					url: 'source.json'

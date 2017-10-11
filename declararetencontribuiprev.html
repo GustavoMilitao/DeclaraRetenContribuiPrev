@@ -8,9 +8,9 @@
 	<link rel="stylesheet" type="text/css" href="css/historico.css">
 </head>
 
-<body ng-app="app.cooperados.declararetencontribuiprev">
+<body ng-cloak ng-app="app.cooperados.declararetencontribuiprev">
 	<div class="cat-2" ng-controller="DeclaraRetenContribuiPrevController" id="declarRetencContribPrev">
-		<form id="formDeclContribuiPrev" name="formDeclContribuiPrev" ng-submit="enviarDeclaracao()">
+		<form ng-hide="carregando" id="formDeclContribuiPrev" name="formDeclContribuiPrev" ng-submit="enviarDeclaracao()">
 			<div class="container">
 				<div class="row">
 					<div class="text-center">
@@ -206,11 +206,13 @@
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					<input ng-model="liEAceito" type="checkbox" class="pull-left checkboxLiAceito">
-					<div class="col-md-2 liAceitoLabel">
-						<label>
+					<div class="col-md-12">
+						<input ng-model="liEAceito" type="checkbox" class="pull-left checkboxLiAceito">
+						<div class="col-md-2 liAceitoLabel">
+							<label>
 				Li e aceito
 				</label>
+						</div>
 					</div>
 				</div>
 			</div>
