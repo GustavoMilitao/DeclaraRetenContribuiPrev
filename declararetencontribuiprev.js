@@ -76,6 +76,8 @@
 
         $scope.dadosRetencContribPrev.informacoesDatasPermitidas.diaLim = 11;
 
+		$ = window.jQuery;
+
 
 		/* FIM DOS MOCKS */
 
@@ -199,21 +201,41 @@
 
             var dataAtual = new Date();
 
-            console.log();
+            var diaLimite = $scope.dadosRetencContribPrev.informacoesDatasPermitidas.diaLim;
 
-
-            if(!$scope.isAnoCorrente()) {
+            if(!$scope.isAnoCorrente($scope.refIni)) {
+                $scope.refIni = '';
                 alert("Mês inicial de referência deverá ser dentro do ano corrente!");
+                $('#refIni').focus();
             } else if($scope.isCompetenciaAnterior()) {
                 alert("Não é permitido o lançamento de declarações com competência inicial inferior à competência atual!");
-            } else if($scope.isCompetenciaAtual()
-                    && dataAtual.getDate() > $scope.dadosRetencContribPrev.informacoesDatasPermitidas.diaLim) {
+                $('#refIni').focus();
+            } else if($scope.isCompetenciaAtual() && dataAtual.getDate() > diaLimite) {
 				alert("Data limite para envio da declaração do mês corrente ultrapassada!");
+                $('#refIni').focus();
 			}
-
 
 		}
 
+
+        $scope.tratarFimReferencia = function() {
+
+            //Se o campo estiver vazio não há nada a ser validado
+            if($scope.refFin.length == 0) return;
+
+            if(!$scope.isAnoCorrente($scope.refFin)) {
+                $scope.refFin = '';
+                alert("Mês final de referência deverá ser dentro do ano corrente!");
+            }
+
+
+            if($scope.isRefFinalMaior($scope.refIni, $scope.refFin)) {
+                $scope.refFin = '';
+                alert("Mês final de referência deverá ser anterior ou igual ao mês ano inicial de referência!");
+                $('#refFin').focus();
+			}
+
+		}
 
 		$scope.isCompetenciaAtual = function() {
 
@@ -259,21 +281,39 @@
         }
 
 
-		$scope.isAnoCorrente = function() {
+		$scope.isAnoCorrente = function(valorCampo) {
 
             var dataAtual = new Date();
 
-
-            var splitDtIniRef = $scope.refIni.split("/");
+            var splitDtIniRef = valorCampo.split("/");
 
             var ano = splitDtIniRef[1];
 
             if(ano != dataAtual.getFullYear()) {
-                $scope.refIni = '';
             	return false;
 			}
 
 			return true;
+
+		}
+
+		$scope.isRefFinalMaior = function(refIni, refFim) {
+
+			var refIniArr = refIni.split('/');
+			var refFimArr = refFim.split('/');
+
+			var diaInicio = refIniArr[0];
+			var anoInicio = refIniArr[1];
+
+            var diaFim = refFimArr[0];
+            var anoFim = refFimArr[1];
+
+			if(anoFim < anoInicio) return true;
+
+			if(diaFim < diaInicio) return true;
+
+
+			return false;
 
 		}
 
