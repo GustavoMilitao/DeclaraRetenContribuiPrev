@@ -65,7 +65,8 @@
 				<div class="row">
 					<div class="col-md-3">
 						<label for="refIni">Mês inicial de Referência</label>
-						<input mask="19/9999" ng-blur="tratarInicioReferencia()" name="refIni" type="text" restrict="reject" id="refIni" ng-model="refIni" class="form-control">
+						<input mask="19/9999" ng-blur="tratarInicioReferencia()" name="refIni" type="text" restrict="reject" id="refIni" ng-model="refIni"
+						 class="form-control">
 					</div>
 					<div class="col-md-3">
 						<label for="refFin">Mês final de Referência</label>
@@ -206,9 +207,9 @@
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					<div class="col-md-12">
+					<div class="col-md-12 liAceito-label-group">
 						<input ng-model="liEAceito" type="checkbox" class="pull-left checkboxLiAceito">
-						<div class="col-md-2 liAceitoLabel">
+						<div class="col-md-2">
 							<label>
 				Li e aceito
 				</label>
@@ -218,70 +219,76 @@
 			</div>
 
 			<div class="container">
-				<div class="row">
-					<div class="text-center">
-						HISTÓRICO DECLARAÇÃO DE RETENÇÃO CONTRIBUIÇÃO PREVIDENCIÁRIA
+				<div class="contribuicao-group">
+					<div class="col-md-12">
+						<a href="#" class="showHidePagadoras" id="historicoDeclaracoes">
+							<span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+						</a> <label>Histórico de declaração enviada</label>
 					</div>
-				</div>
+					<div id="historicoDeclaracoes_alvo" class="empresa col-md-12">
+						<div class="row">
+							<div class="text-center">
+								HISTÓRICO DECLARAÇÃO DE RETENÇÃO CONTRIBUIÇÃO PREVIDENCIÁRIA
+							</div>
+						</div>
+						<div class="row empresasPagadoras">
 
-				<div class="col-md-12">
-					<div class="row empresasPagadoras">
-
-						<div class="">
-							<div id="pontuacao">
-								<div class="col-md-8">
-									<div class="cabecalhoTabela" width="100%">
-										<div id="dtEnvio" class="width50pc">
-											<span>Data de Envio</span>
-										</div>
-										<div id="periodoReferencia" class="width50pc">
-											<span>Período de Referência</span>
-										</div>
-										<div id="dtInicioValidade" class="width50pc">
-											<span>Data Início Validade</span>
-										</div>
-										<div id="dtFimValidade" class="width50pc">
-											<span>Data Fim Validade</span>
+							<div class="">
+								<div id="pontuacao">
+									<div class="col-md-8">
+										<div class="cabecalhoTabela" width="100%">
+											<div id="dtEnvio" class="width50pc">
+												<span>Data de Envio</span>
+											</div>
+											<div id="periodoReferencia" class="width50pc">
+												<span>Período de Referência</span>
+											</div>
+											<div id="dtInicioValidade" class="width50pc">
+												<span>Data Início Validade</span>
+											</div>
+											<div id="dtFimValidade" class="width50pc">
+												<span>Data Fim Validade</span>
+											</div>
 										</div>
 									</div>
-								</div>
-								<div class="clear-float"></div>
-								<div class="col-md-12">
-									<div class="linha">
-										<div class="row contribuicao-group" ng-repeat="(key, row) in dadosRetencContribPrev.declaracoesIncluidas">
-											<div class="row linha-contribuicao">
+									<div class="clear-float"></div>
+									<div class="col-md-12">
+										<div class="linha">
+											<div class="row contribuicao-group" ng-repeat="(key, row) in dadosRetencContribPrev.declaracoesIncluidas">
+												<div class="row linha-contribuicao">
 
-												<div class="col-md-2">
-													<a href="#" class="showHidePagadoras" id="declaracao_{{ key + 1 }}">
+													<div class="col-md-2">
+														<a href="#" class="showHidePagadoras" id="declaracao_{{ key + 1 }}">
 														<span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
 													</a> {{ row.datMov }}
+													</div>
+
+													<div class="col-md-2"> {{row.cmpIni}} - {{row.cmpFim}} </div>
+													<div ng-bind="getInicioValidade(row.cmpIni)" class="col-md-2"> </div>
+													<div ng-bind="getFimValidade(row.cmpFim)" class="col-md-2"> </div>
 												</div>
 
-												<div class="col-md-2"> {{row.cmpIni}} - {{row.cmpFim}} </div>
-												<div ng-bind="getInicioValidade(row.cmpIni)" class="col-md-2">  </div>
-												<div ng-bind="getFimValidade(row.cmpFim)" class="col-md-2"> </div>
-											</div>
+												<div class="empresa" id="declaracao_{{ key + 1 }}_alvo">
+													<!-- Lista empresas pagadoras -->
+													<div class="row" ng-repeat="empresa in row.empresasPagadoras">
 
-											<div class="empresa" id="declaracao_{{ key + 1 }}_alvo">
-												<!-- Lista empresas pagadoras -->
-												<div class="row" ng-repeat="empresa in row.empresasPagadoras">
+														<div class="col-md-5 cell" ng-bind="empresa.nomOem"></div>
+														<div class="col-md-3 cell" ng-bind="empresa.numIns"></div>
+														<div class="col-md-2 cell" ng-bind="empresa.bmeIns"></div>
+														<div class="col-md-2 cell" ng-bind="empresa.vmeIns"></div>
 
-													<div class="col-md-5 cell" ng-bind="empresa.nomOem"></div>
-													<div class="col-md-3 cell" ng-bind="empresa.numIns"></div>
-													<div class="col-md-2 cell" ng-bind="empresa.bmeIns"></div>
-													<div class="col-md-2 cell" ng-bind="empresa.vmeIns"></div>
+													</div>
 
 												</div>
-
 											</div>
 										</div>
 									</div>
 								</div>
 							</div>
 						</div>
+						<p>* Declaração finalizada pelo RH da Unimed-BH. Dúvidas entre em contato com sua analista de relacionamento.</p>
 					</div>
 				</div>
-				<p>* Declaração finalizada pelo RH da Unimed-BH. Dúvidas entre em contato com sua analista de relacionamento.</p>
 			</div>
 
 			<div class="col-md-12">
