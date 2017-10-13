@@ -61,13 +61,14 @@
 		}
 
 		$scope.getUrlIncluirDeclaracao = function (refIni, refFin, empresasPagadoras, crm, acesso, sobrepor) {
+
 			var urlIncluirDeclaracao = "https://areadocolaboradordesv.unimedbh.com.br/portalrh/conector?" +
 				"ACAO=EXECUTAREGRA&" +
 				"SIS=FP&" +
 				"REGRA=456&" +
 				"metodo=incluirDeclaracao&" +
 				"qtdDeclaracao=" + empresasPagadoras.length +
-				"numCad=" + crm + "&";
+				"&numCad=" + crm + "&";
 			for (var i = 0; i < empresasPagadoras.length; i++) {
 				urlIncluirDeclaracao += "dadosDeclaracao_" + (i + 1) + "=";
 				urlIncluirDeclaracao += (refIni +
@@ -77,6 +78,7 @@
 					empresasPagadoras[i].valRetencInss) + "&";
 			}
 			urlIncluirDeclaracao += "USER=webservice_INSSCoop&CONNECTION=" + acesso;
+
 			return sobrepor ? urlIncluirDeclaracao + "&sobrepor=S" : urlIncluirDeclaracao;
 		}
 
@@ -118,6 +120,7 @@
 
 		/* Limpar tela */
 		$scope.limparTela = function () {
+
 			$scope.refIni = "";
 			$scope.refFin = "";
 			$scope.empresasPagadoras = [];
@@ -137,6 +140,7 @@
 			$scope.desabilitarCamposEmpresa = false;
 			$scope.desabilitaEnvio = false;
 			$scope.carregando = false;
+
         }
 		/* Fim dados Tela */
 
@@ -175,6 +179,8 @@
 		/* Empresas pagadoras */
 
 		$scope.adicionarEmpresa = function () {
+
+
 			if (!$scope.empresaAIncluir.numIns || $scope.empresaAIncluir.numIns == "" ||
 				!$scope.empresaAIncluir.valSalarContrib || $scope.empresaAIncluir.valSalarContrib == 0) {
 				alert("Obrigatório informar o CNPJ e Valor do Salário de Contribuição!");
@@ -195,6 +201,9 @@
 					}
 				}
 			}
+
+            console.log($scope.empresasPagadoras);
+
 		}
 
 		$scope.incluirEmpresa = function (empresa, lista) {
@@ -249,7 +258,9 @@
 			$scope.$apply(function ($scope) {
 				for (var i = 0; i < input.files.length; i++) {
 					if (!$scope.contemNaLista(input.files[i].name, $scope.anexos))
-						$scope.anexos.push(input.files[i]);
+						$scope.anexos.push({
+                            name: input.files[i].name
+						});
 				}
 
 			});
@@ -283,23 +294,16 @@
 
                     return function (e) {
 
-                        //Para saber que o arquivo foi carregado
-                        theFile.carregado = true;
-
-                        if($scope.anexosBase64.indexOf(e.target.result) == -1) {
-
-                            $scope.anexosBase64.push({
-                                name: theFile.name,
-                                dataURL: e.target.result
-                            });
-
-                        }
+                        for(var i in $scope.anexos) {
+                        	if($scope.anexos[i].name == theFile.name) {
+                                $scope.anexos[i].dataURL = e.target.result;
+							}
+						}
 
                     };
 
 
                 })(files[i]);
-
 
                 reader.readAsDataURL(files[i]);
 
@@ -318,14 +322,16 @@
 				var txt;
 				var r = confirm("Confirma a retenção dos valores de INSS no período de " + $scope.refIni + " a " + $scope.refIni + " via outras fontes pagadoras informada?");
 				if (r == true) {
-					$scope.lerAnexos();
+
+					// $scope.lerAnexos();
+
 					// Tentativa de envio de declaração.
 					// ver se tem falha
 					// se tiver falha, verificar codigo.
 					// codigo constante.ErroDeclEnv
 					// Envia novamente com o parâmetro sobrepor=s na url.
 					// Mandar mensagem de sucesso.
-					incluirDeclaracao($scope.dadosRetencContribPrev.refIni,
+                    $scope.incluirDeclaracao($scope.dadosRetencContribPrev.refIni,
 						$scope.dadosRetencContribPrev.refFin,
 						$scope.dadosRetencContribPrev.empresasPagadoras,
 						$scope.dadosRetencContribPrev.dadosCooperado.numCad);
@@ -333,30 +339,38 @@
 					$scope.limparTela();
 				}
 			} else {
-				$scope.lerAnexos();
+
+				// $scope.lerAnexos();
+
+
 				// Tentativa de envio de declaração.
 				// ver se tem falha
 				// se tiver falha, verificar codigo.
 				// codigo constante.ErroDeclEnv
 				// Envia novamente com o parâmetro sobrepor=s na url.
 				// Mandar mensagem de sucesso.
-				incluirDeclaracao($scope.dadosRetencContribPrev.refIni,
-					$scope.dadosRetencContribPrev.refFin,
-					$scope.dadosRetencContribPrev.empresasPagadoras,
+				$scope.incluirDeclaracao($scope.refIni,
+					$scope.refFin,
+					$scope.empresasPagadoras,
 					$scope.dadosRetencContribPrev.dadosCooperado.numCad);
 			}
 		}
 
 		$scope.incluirDeclaracao = function (refIni, refFin, empresasPagadoras, crm) {
+
 			$http({
 				method: "GET",
 				url: $scope.getUrlAutenticacao()
 			}).then(function (response) {
+
 				var acesso = response.data;
+
 				$http({
 					method: "POST",
 					url: $scope.getUrlIncluirDeclaracao(refIni, refFin, empresasPagadoras, crm, acesso)
 				}).then(function (response) {
+
+
 					if (response.data.falha) {
 						if (response.data.falha.status === "0") {
 							var txt;
@@ -367,6 +381,7 @@
 									url: $scope.getUrlIncluirDeclaracao(refIni, refFin, empresasPagadoras, crm, acesso, true),
 								}).then(function (response) {
 									alert("Envio concluído com sucesso!");
+                                    $scope.limparTela();
 								});
 							}
 						}
@@ -376,11 +391,15 @@
 					}
 					else {
 						alert("Envio concluído com sucesso!");
+                        $scope.limparTela();
 					}
 				}, function myError(response) {
 					console.log(response.statusText);
 				});
-			});
+			}, function myError(response) {
+				console.log('aqui');
+                console.log(response.statusText);
+            });
 		}
 
 		/* Fim Enviar declaração */
