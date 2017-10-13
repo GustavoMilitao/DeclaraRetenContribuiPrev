@@ -33,7 +33,6 @@
 	/** @ngInject */
 	function DeclaraRetenContribuiPrevController($scope,$http/*,cooperados,consultarCooperado*/) {
 
-		var vm = this;
 		$ = window.jQuery;
 
 		/* URLS */
