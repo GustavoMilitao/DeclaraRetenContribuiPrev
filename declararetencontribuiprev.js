@@ -34,32 +34,24 @@
 	function DeclaraRetenContribuiPrevController($scope, $http/*,cooperados,consultarCooperado*/) {
 
 
+		$scope.getUrlAutenticacao = function(){
+			return "https://areadocolaboradordesv.unimedbh.com.br/portalrh/conector?"+
+			"SIS=FP&"+
+			"LOGIN=SID&"+
+			"ACAO=EXESENHA&"+
+			"NOMUSU=webservice_INSSCoop&"+
+			"SENUSU=abc123";
+		}
+
 		$scope.getDadosCooperado = function(crm){
 			var urlAcesso = "";
 
 			$http({
 				method : "GET",
-				url : "https://areadocolaboradordesv.unimedbh.com.br/portalrh/conector?"+
-				"SIS=FP&"+
-				"LOGIN=SID&"+
-				"ACAO=EXESENHA&"+
-				"NOMUSU=webservice_INSSCoop&"+
-				"SENUSU=abc123"
+				url : $scope.getUrlAutenticacao()
 			}).then(function(response){
 				var acesso = response.data;
-				var urlGetDadosCooperado =
-				"https://areadocolaboradordesv.unimedbh.com.br/portalrh/conector?" +
-				"ACAO=EXECUTAREGRA&"+
-				"SIS=FP&"+
-				"REGRA=456&"+
-				"metodo=buscaDadosInciais&"+
-				"numEmp=3&"+
-				"numCad="+crm+"&"+
-				"listaDeclaracoes=S&"+
-				"listaCNPJ=S&"+
-				"USER=webservice_INSSCoop&"+
-				"CONNECTION="+acesso;
-
+				var urlGetDadosCooperado = $scope.getUrlDadosCooperado(crm, acesso);
 				$http({
 					method : "GET",
 					url : urlGetDadosCooperado,
@@ -78,7 +70,23 @@
 			});
 
 		}
-		// $scope.getDadosCooperado(7007);
+
+		$scope.getUrlDadosCooperado = function(crm, acesso){
+			return "https://areadocolaboradordesv.unimedbh.com.br/portalrh/conector?" +
+			"ACAO=EXECUTAREGRA&"+
+			"SIS=FP&"+
+			"REGRA=456&"+
+			"metodo=buscaDadosInciais&"+
+			"numEmp=3&"+
+			"numCad="+crm+"&"+
+			"listaDeclaracoes=S&"+
+			"listaCNPJ=S&"+
+			"USER=webservice_INSSCoop&"+
+			"CONNECTION="+acesso+"&" +
+			"listaFoto=N";
+		}
+
+		$scope.getDadosCooperado(7007);
 
 		$scope.limparTela = function(){
 			$scope.refIni = "";
@@ -107,37 +115,16 @@
 
 		/* Dados cooperado */
 		$scope.dadosRetencContribPrev = {};
+		$scope.dadosRetencContribPrev.informacoesDatasPermitidas = {};
+		$scope.dadosRetencContribPrev.informacoesDatasPermitidas.fimInc = "";
+		$scope.dadosRetencContribPrev.informacoesDatasPermitidas.iniInc = "";
 		/* Fim dados cooperado */
 		/* ------------------------------- */
 
-
-        $scope.dadosRetencContribPrev.informacoesDatasPermitidas = {};
-
-
 		/* MOCKS */
-        // $scope.dadosRetencContribPrev.informacoesDatasPermitidas = {
-        //     fimInc: '11/2017',
-        //     limCon: '11'
-        // };
-        //
-        // $scope.dadosRetencContribPrev.informacoesDatasPermitidas = {
-        //     iniInc: '11/2017',
-        //     fimInc: '11/2017'
-        // };
-
-
-        $scope.dadosRetencContribPrev.informacoesDatasPermitidas.fimInc = '11/2017';
-        $scope.dadosRetencContribPrev.informacoesDatasPermitidas.limCon = '11';
-
-        $scope.dadosRetencContribPrev.informacoesDatasPermitidas.iniInc = '11/2017';
-        $scope.dadosRetencContribPrev.informacoesDatasPermitidas.fimInc = '11';
-
-
-
 
 		$scope.param1 = "Se dados acima incorretos, entrar em contato com sua analista de relacionamento para atualização.";
 		$scope.param2 = "VAI VIR PREENCHIDO {PARAMETRO 2}";
-
 
 		$ = window.jQuery;
 
@@ -232,58 +219,67 @@
 			}
 		}
 
-		$scope.filesList = [];
-
-
 		$scope.anexosSelecionados = function (input) {
 
 
-			var filesList = input.files;
+            $scope.$apply(function ($scope) {
 
-			var reader = new FileReader();
+            	for (var i = 0; i < input.files.length; i++) {
+                    if (!contemNaLista(input.files[i].name, $scope.anexos))
+                        $scope.anexos.push(input.files[i]);
+                }
 
-			// reader.readAsDataURL(filesList);
+                input.value = '';
+            });
+
+            $scope.lerAnexos();
+
+		}
 
 
+		$scope.verAnexos = function() {
 
-			for(var i in filesList) {
-                reader.readAsDataURL(filesList[i]);
+			console.log($scope.anexos);
+			// console.log($scope.anexosBase64);
+
+		}
+
+
+        $scope.ArrayArquivoEmBytes = [];
+
+
+		$scope.anexosBase64 = [];
+
+		$scope.lerAnexos = function() {
+
+			var files = $scope.anexos;
+
+			for (var i = 0; i < files.length; i++) {
+
+				var reader = new FileReader();
+
+
+				reader.onload = (function(theFile) {
+
+					var fileName = theFile.name;
+
+					return function(e) {
+
+						//Para saber que o arquivo foi carregado
+						theFile.carregado = true;
+
+						$scope.anexosBase64.push(e.target.result);
+					};
+
+
+				})(files[i]);
+
+
+				reader.readAsDataURL(files[i]);
+
 			}
 
 
-			// console.log('Carregando...');
-
-			reader.onload = function() {
-				// console.log(reader.result);
-                $scope.filesList.push(reader.result);
-                console.log('Concluído...');
-
-                console.log($scope.filesList.length);
-
-			}
-
-
-			// console.log(filesList[0]);
-
-			// console.log(filesList);
-
-
-            // var fileContent = input.getContent();
-
-
-            // new FileReader(input)
-
-
-			// console.log(fileContent);
-
-
-			$scope.$apply(function ($scope) {
-				for (var i = 0; i < input.files.length; i++) {
-					if (!contemNaLista(input.files[i].name, $scope.anexos))
-						$scope.anexos.push(input.files[i]);
-				}
-				input.value = '';
-			});
 		}
 
 		$scope.enviarDeclaracao = function () {
@@ -298,18 +294,82 @@
 					// codigo constante.ErroDeclEnv
 					// Envia novamente com o parâmetro sobrepor=s na url.
 					// Mandar mensagem de sucesso.
+					incluirDeclaracao($scope.dadosRetencContribPrev.refIni,
+									  $scope.dadosRetencContribPrev.refFin,
+									  $scope.dadosRetencContribPrev.empresasPagadoras,
+									  $scope.dadosRetencContribPrev.dadosCooperado.numCad);
 				} else {
 					$scope.limparTela();
 				}
+			}else{
+				$scope.lerAnexos();
+				// Tentativa de envio de declaração.
+				// ver se tem falha
+				// se tiver falha, verificar codigo.
+				// codigo constante.ErroDeclEnv
+				// Envia novamente com o parâmetro sobrepor=s na url.
+				// Mandar mensagem de sucesso.
+				incluirDeclaracao($scope.dadosRetencContribPrev.refIni,
+								  $scope.dadosRetencContribPrev.refFin,
+								  $scope.dadosRetencContribPrev.empresasPagadoras,
+								  $scope.dadosRetencContribPrev.dadosCooperado.numCad);
 			}
 		}
 
-		$scope.lerAnexos = function(){
-			var reader = new FileReader();
-			reader.onload = function(event) {
-				ArrayArquivoEmBytes.push(event.target.result);
+		$scope.getUrlIncluirDeclaracao = function(refIni, refFin, empresasPagadoras, crm, acesso, sobrepor){
+			var urlGetDadosCooperado = "https://areadocolaboradordesv.unimedbh.com.br/portalrh/conector?" +
+			"ACAO=EXECUTAREGRA&"+
+			"SIS=FP&"+
+			"REGRA=456&"+
+			"metodo=incluirDeclaracao&"+
+			"qtdDeclaracao="+ empresasPagadoras.length +
+			"numCad="+crm+"&";
+			for(var i = 0; i < empresasPagadoras.length; i++){
+				urlGetDadosCooperado += "dadosDeclaracao_"+(i+1)+"=";
+				urlGetDadosCooperado += (refIni+
+										 refFin+
+										 empresasPagadoras[i].cnpj+
+										 empresasPagadoras[i].valSalarContrib+
+										 empresasPagadoras[i].valRetencInss)+"&";
 			}
-			reader.readAsText(file);
+			urlGetDadosCooperado += "USER=webservice_INSSCoop&CONNECTION="+acesso;
+			return sobrepor ? urlGetDadosCooperado + "&sobrepor=S" : urlGetDadosCooperado;
+		}
+
+		$scope.incluirDeclaracao = function(refIni, refFin, empresasPagadoras, crm){
+			$http({
+				method : "GET",
+				url : $scope.getUrlAutenticacao()
+			}).then(function(response){
+				var acesso = response.data;
+				$http({
+					method : "POST",
+					url : $scope.getUrlIncluirDeclaracao(refIni, refFin, empresasPagadoras, crm, acesso)
+				}).then(function(response){
+					if(response.data.falha){
+						if(response.data.falha.status === "0"){
+							var txt;
+							var r = confirm(response.data.falha.erroExecucao);
+							if (r == true) {
+								$http({
+									method : "POST",
+									url : $scope.getUrlIncluirDeclaracao(refIni, refFin, empresasPagadoras, crm, acesso, true),
+								}).then(function(response){
+									alert("Envio concluído com sucesso!");
+								});
+							}
+						}
+						else{
+							alert(response.data.falha.erroExecucao);
+						}
+					}
+					else{
+						alert("Envio concluído com sucesso!");
+					}
+				}, function myError(response) {
+					console.log(response.statusText);
+				});
+			});
 		}
 
 
@@ -482,7 +542,6 @@
 			return dataLimite;
 		}
 
-
 		$scope.getDataInicioInc = function () {
 			var split = $scope.dadosRetencContribPrev.informacoesDatasPermitidas.iniInc.split("/");
 			var ano = split[2];
@@ -559,54 +618,34 @@
 		
 				});
 
-				$http({
-					method: 'GET',
-					url: 'source.json'
-				}).then(function(response) {
-					$scope.historicoList = response.data;
-				})
-	}
-
-	function a (){
-			if ($scope.jaEnviadaHoje()) { // RN 10
-				var txt;
-				var r = confirm("Declaração de retenção de contribuição previdenciária já foi enviada na data de hoje. Deseja Substituir?");
-				if (r == true) {
-					// Excluir declaração enviada.
-					//RN19 (Dúvida, tirar com Elayne)
-				} else {
-					$scope.desabilitaEnvio = true;
+				$scope.getInicioValidade = function (refIni) {
+					return "01/" + refIni;
 				}
-			}
+				
+				$scope.getFimValidade = function (refFim) {
+					var mesEAno = refFim.split("/");
+					var dias = getNumDiasMes(mesEAno[0],mesEAno[1]);
+					return dias + "/" + refFim;
+				}
 	}
 })();
-
-var getInicioValidade = function (refIni) {
-	return "01/" + refIni;
-}
-
-var getFimValidade = function (refFim) {
-	var mesEAno = refFim.split("/");
-	var dias = getNumDiasMes(mesEAno[0].mesEAno[1]);
-	return dias + "/" + refFim;
-}
 
 var getNumDiasMes = function (mes, ano) {
 
 	var ehBissexto = ((ano % 4 == 0) && (ano % 100 != 0)) || (ano % 400 == 0);
 	switch (mes) {
-		case 1: return 31;
-		case 2: return ehBissexto ? 29 : 28;
-		case 3: return 31;
-		case 4: return 30;
-		case 5: return 31;
-		case 6: return 30;
-		case 7: return 31;
-		case 8: return 31;
-		case 9: return 30;
-		case 10: return 31;
-		case 11: return 30;
-		case 12: return 31;
+		case "01": return 31;
+		case "02": return ehBissexto ? 29 : 28;
+		case "03": return 31;
+		case "04": return 30;
+		case "05": return 31;
+		case "06": return 30;
+		case "07": return 31;
+		case "08": return 31;
+		case "09": return 30;
+		case "10": return 31;
+		case "11": return 30;
+		case "12": return 31;
 	}
 }
 
