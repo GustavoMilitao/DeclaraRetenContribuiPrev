@@ -62,7 +62,7 @@
 		}
 
 		vm.getUrlIncluirDeclaracao = function (refIni, refFin, empresasPagadoras, crm, acesso, sobrepor) {
-			var urlGetDadosCooperado = "https://areadocolaboradordesv.unimedbh.com.br/portalrh/conector?" +
+			var urlIncluirDeclaracao = "https://areadocolaboradordesv.unimedbh.com.br/portalrh/conector?" +
 				"ACAO=EXECUTAREGRA&" +
 				"SIS=FP&" +
 				"REGRA=456&" +
@@ -70,15 +70,15 @@
 				"qtdDeclaracao=" + empresasPagadoras.length +
 				"numCad=" + crm + "&";
 			for (var i = 0; i < empresasPagadoras.length; i++) {
-				urlGetDadosCooperado += "dadosDeclaracao_" + (i + 1) + "=";
-				urlGetDadosCooperado += (refIni +
+				urlIncluirDeclaracao += "dadosDeclaracao_" + (i + 1) + "=";
+				urlIncluirDeclaracao += (refIni +
 					refFin +
 					empresasPagadoras[i].cnpj +
 					empresasPagadoras[i].valSalarContrib +
 					empresasPagadoras[i].valRetencInss) + "&";
 			}
-			urlGetDadosCooperado += "USER=webservice_INSSCoop&CONNECTION=" + acesso;
-			return sobrepor ? urlGetDadosCooperado + "&sobrepor=S" : urlGetDadosCooperado;
+			urlIncluirDeclaracao += "USER=webservice_INSSCoop&CONNECTION=" + acesso;
+			return sobrepor ? urlIncluirDeclaracao + "&sobrepor=S" : urlIncluirDeclaracao;
 		}
 
 		/* Fim URLS */
@@ -105,6 +105,7 @@
 					}
 					else {
 						vm.dadosRetencContribPrev = response.data;
+						vm.tratarPermissaoEnvioDeclaracao();
 						vm.carregando = false;
 					}
 				}, function myError(response) {
@@ -509,12 +510,6 @@
 
 		/* Fim Verificação data de envio */
 
-		angular.element(document).ready(function () {
-			vm.tratarPermissaoEnvioDeclaracao();
-		});
-
-		$ = window.jQuery;
-
 		$(document).on('click', '.showHidePagadoras', function (e) {
 			e.preventDefault();
 			var alvo = $('#' + this.id + '_alvo');
@@ -543,18 +538,6 @@
 			return dias + "/" + refFim;
 		}
 
-		vm.getDadosCooperado(7007);
-
-		vm.limparTela();
-
-		/* MOCKS */
-
-		vm.param1 = "Se dados acima incorretos, entrar em contato com sua analista de relacionamento para atualização.";
-		vm.param2 = "VAI VIR PREENCHIDO {PARAMETRO 2}";
-
-
-		/* FIM DOS MOCKS */
-
 
 		/* Varredura de listas */
 
@@ -578,6 +561,21 @@
 			return contem;
 		}
 		/* Fim Varredura de listas */
+
+		vm.getDadosCooperado(7007);
+
+		vm.limparTela();
+
+		/* MOCKS */
+
+		vm.param1 = "Se dados acima incorretos, entrar em contato com sua analista de relacionamento para atualização.";
+		vm.param2 = "VAI VIR PREENCHIDO {PARAMETRO 2}";
+
+
+		/* FIM DOS MOCKS */
+
+		angular.element(document).ready(function () {
+		});
 	}
 })();
 
