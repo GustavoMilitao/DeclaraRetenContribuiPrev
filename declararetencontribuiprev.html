@@ -2,6 +2,7 @@
 
 <head>
 	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=9,chrome=1" />
 	<link rel="stylesheet" type="text/css" href="bootstrap.css">
 	<link rel="stylesheet" type="text/css" href="declararetencontribuiprev.css">
 	<link rel="stylesheet" type="text/css" href="css/estilo.css">
@@ -39,19 +40,19 @@
 									<input maxlength="6" ng-model="dadosRetencContribPrev.dadosCooperado.numCad" class="form-control" readonly>
 								</div>
 							</div>
-							<div class="row">
-								<div class="col-md-8">
-									<div class="col-md-5">
-										<label for="cpf">CPF</label>
-										<input maxlength="14" clean="true" mask="999.999.999-99" ng-model="dadosRetencContribPrev.dadosCooperado.numCpf" id="cpf"
-										 class="form-control input-borders" readonly>
-									</div>
-									<div class="col-md-5">
-										<label for="numInscInss">Número Inscrição INSS</label>
-										<input maxlength="12" id="numInscInss" ng-model="dadosRetencContribPrev.dadosCooperado.numPis" class="form-control" readonly>
-									</div>
+							<div class="col-md-8">
+								<div class="col-md-5">
+									<label for="cpf">CPF</label>
+									<input maxlength="14" clean="true" mask="999.999.999-99" ng-model="dadosRetencContribPrev.dadosCooperado.numCpf" id="cpf"
+									 class="form-control input-borders" readonly>
 								</div>
+								<div class="col-md-5">
+									<label for="numInscInss">Número Inscrição INSS</label>
+									<input maxlength="12" id="numInscInss" ng-model="dadosRetencContribPrev.dadosCooperado.numPis" class="form-control" readonly>
+								</div>
+								<div class="col-md-2"></div>
 							</div>
+							<div class="col-md-4"></div>
 						</div>
 					</div>
 				</div>
@@ -315,7 +316,6 @@
 	<script type="text/javascript" src="ngMask.js"></script>
 	<script type="text/javascript" src="js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="declararetencontribuiprev.js"></script>
-
 
 
 </body>
