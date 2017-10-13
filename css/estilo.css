@@ -3174,8 +3174,8 @@ button.ui-button.ui-corner-all.ui-widget {
 }
 .botaoIngressoOnline {
     width: 280px;
-    background-color: #A0238C;  
-    padding: 10px 15px; 
+    background-color: #A0238C;
+    padding: 10px 15px;
     margin-left: 20px;
     text-align: center;
     -moz-border-radius: 10px;
@@ -3197,7 +3197,7 @@ button.ui-button.ui-corner-all.ui-widget {
 
 #calendarioHome .evento a.listed-event {
     background: #b1d34b!important;
-    cursor: pointer;   
+    cursor: pointer;
 }
 
 /*Correção botão envie sua mensagem*/

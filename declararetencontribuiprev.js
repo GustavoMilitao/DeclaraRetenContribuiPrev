@@ -33,6 +33,7 @@
 	/** @ngInject */
 	function DeclaraRetenContribuiPrevController($scope, $http/*,cooperados,consultarCooperado*/) {
 
+
 		$scope.getDadosCooperado = function(crm){
 			var urlAcesso = "";
 
@@ -46,7 +47,7 @@
 				"SENUSU=abc123"
 			}).then(function(response){
 				var acesso = response.data;
-				var urlGetDadosCooperado = 
+				var urlGetDadosCooperado =
 				"https://areadocolaboradordesv.unimedbh.com.br/portalrh/conector?" +
 				"ACAO=EXECUTAREGRA&"+
 				"SIS=FP&"+
@@ -77,7 +78,7 @@
 			});
 
 		}
-		$scope.getDadosCooperado(7007);
+		// $scope.getDadosCooperado(7007);
 
 		$scope.limparTela = function(){
 			$scope.refIni = "";
@@ -97,7 +98,7 @@
 			$scope.hideEmpresa = true;
 			$scope.desabilitarCamposEmpresa = false;
 			$scope.desabilitaEnvio = false;
-			$scope.carregando = true;
+			$scope.carregando = false;
 		}
 		/* Objetos utilizados na inclusão atual */
 		/* Tela */
@@ -109,10 +110,34 @@
 		/* Fim dados cooperado */
 		/* ------------------------------- */
 
+
+        $scope.dadosRetencContribPrev.informacoesDatasPermitidas = {};
+
+
 		/* MOCKS */
+        // $scope.dadosRetencContribPrev.informacoesDatasPermitidas = {
+        //     fimInc: '11/2017',
+        //     limCon: '11'
+        // };
+        //
+        // $scope.dadosRetencContribPrev.informacoesDatasPermitidas = {
+        //     iniInc: '11/2017',
+        //     fimInc: '11/2017'
+        // };
+
+
+        $scope.dadosRetencContribPrev.informacoesDatasPermitidas.fimInc = '11/2017';
+        $scope.dadosRetencContribPrev.informacoesDatasPermitidas.limCon = '11';
+
+        $scope.dadosRetencContribPrev.informacoesDatasPermitidas.iniInc = '11/2017';
+        $scope.dadosRetencContribPrev.informacoesDatasPermitidas.fimInc = '11';
+
+
+
 
 		$scope.param1 = "Se dados acima incorretos, entrar em contato com sua analista de relacionamento para atualização.";
 		$scope.param2 = "VAI VIR PREENCHIDO {PARAMETRO 2}";
+
 
 		$ = window.jQuery;
 
@@ -207,7 +232,51 @@
 			}
 		}
 
+		$scope.filesList = [];
+
+
 		$scope.anexosSelecionados = function (input) {
+
+
+			var filesList = input.files;
+
+			var reader = new FileReader();
+
+			// reader.readAsDataURL(filesList);
+
+
+
+			for(var i in filesList) {
+                reader.readAsDataURL(filesList[i]);
+			}
+
+
+			// console.log('Carregando...');
+
+			reader.onload = function() {
+				// console.log(reader.result);
+                $scope.filesList.push(reader.result);
+                console.log('Concluído...');
+
+                console.log($scope.filesList.length);
+
+			}
+
+
+			// console.log(filesList[0]);
+
+			// console.log(filesList);
+
+
+            // var fileContent = input.getContent();
+
+
+            // new FileReader(input)
+
+
+			// console.log(fileContent);
+
+
 			$scope.$apply(function ($scope) {
 				for (var i = 0; i < input.files.length; i++) {
 					if (!contemNaLista(input.files[i].name, $scope.anexos))
@@ -413,6 +482,7 @@
 			return dataLimite;
 		}
 
+
 		$scope.getDataInicioInc = function () {
 			var split = $scope.dadosRetencContribPrev.informacoesDatasPermitidas.iniInc.split("/");
 			var ano = split[2];
@@ -488,13 +558,12 @@
 		
 		
 				});
+
 				$http({
 					method: 'GET',
 					url: 'source.json'
 				}).then(function(response) {
 					$scope.historicoList = response.data;
-					console.log(response.data);
-		
 				})
 	}
 
