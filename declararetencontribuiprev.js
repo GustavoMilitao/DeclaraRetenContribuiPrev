@@ -124,8 +124,8 @@
 			$scope.anexos = [];
 			$scope.liEAceito = false;
 			$scope.empresaAIncluir = {
-				cnpj: "",
-				nomeEmpresa: "",
+				numIns: "",
+				razSoc: "",
 				valSalarContrib: 0.0,
 				valRetencInss: 0.0
 			}
