@@ -122,6 +122,7 @@
 			$scope.refFin = "";
 			$scope.empresasPagadoras = [];
 			$scope.anexos = [];
+            $scope.anexosBase64 = [];
 			$scope.liEAceito = false;
 			$scope.empresaAIncluir = {
 				cnpj: "",
@@ -135,8 +136,8 @@
 			$scope.hideEmpresa = true;
 			$scope.desabilitarCamposEmpresa = false;
 			$scope.desabilitaEnvio = false;
-			$scope.carregando = true;
-		}
+			$scope.carregando = false;
+        }
 		/* Fim dados Tela */
 
 		/* AutoComplete */
@@ -220,6 +221,22 @@
 		/* Anexos */
 
 		$scope.removerAnexo = function (anexo) {
+
+			var nameAnexo = anexo.name;
+
+			var anexosBase64 = $scope.anexosBase64
+
+			for(var i = 0; i < anexosBase64.length; i++) {
+
+				if(anexosBase64[i].name == nameAnexo) {
+					anexosBase64.splice(i, 1);
+					break;
+				}
+
+			}
+
+
+
 			for (var i = 0; i < $scope.anexos.length; i++) {
 				if ($scope.anexos[i].name === anexo.name) {
 					$scope.anexos.splice(i, 1);
@@ -228,23 +245,68 @@
 		}
 
 		$scope.anexosSelecionados = function (input) {
+
 			$scope.$apply(function ($scope) {
 				for (var i = 0; i < input.files.length; i++) {
 					if (!$scope.contemNaLista(input.files[i].name, $scope.anexos))
 						$scope.anexos.push(input.files[i]);
 				}
-				input.value = '';
+
 			});
+
+
+			$scope.lerAnexos(input.files);
+
+
+            input.value = '';
+
+
+
+		}
+
+		$scope.verAnexos = function() {
+			console.log($scope.anexos);
+			console.log($scope.anexosBase64);
 		}
 
 
-		$scope.lerAnexos = function () {
-			var reader = new FileReader();
-			reader.onload = function (event) {
-				ArrayArquivoEmBytes.push(event.target.result);
-			}
-			reader.readAsText(file);
+		$scope.lerAnexos = function(files) {
+
+            for (var i = 0; i < files.length; i++) {
+
+                var reader = new FileReader();
+
+
+                reader.onload = (function (theFile) {
+
+                    var fileName = theFile.name;
+
+                    return function (e) {
+
+                        //Para saber que o arquivo foi carregado
+                        theFile.carregado = true;
+
+                        if($scope.anexosBase64.indexOf(e.target.result) == -1) {
+
+                            $scope.anexosBase64.push({
+                                name: theFile.name,
+                                dataURL: e.target.result
+                            });
+
+                        }
+
+                    };
+
+
+                })(files[i]);
+
+
+                reader.readAsDataURL(files[i]);
+
+            }
+
 		}
+
 
 		/* Fim anexos */
 
