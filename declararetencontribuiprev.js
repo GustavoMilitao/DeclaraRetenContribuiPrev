@@ -138,7 +138,7 @@
 			$scope.hideEmpresa = true;
 			$scope.desabilitarCamposEmpresa = false;
 			$scope.desabilitaEnvio = false;
-			$scope.carregando = true;
+			$scope.carregando = false;
 
         }
 		/* Fim dados Tela */

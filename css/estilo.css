@@ -3212,3 +3212,7 @@ a.showHidePagadoras {
 a.showHidePagadoras:hover {
     color: #F5781E;
 }
+
+.error {
+    color: red;
+}
