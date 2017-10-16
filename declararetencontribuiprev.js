@@ -59,7 +59,7 @@
 				"CONNECTION=" + acesso; 
 		}
 
-		$scope.getUrlIncluirDeclaracao = function (refIni, refFin, empresasPagadoras, crm, acesso, sobrepor) {
+		$scope.getUrlIncluirDeclaracao = function (refIni, refFin, empresasPagadoras, crm, acesso, anexos, sobrepor) {
 
 			var urlIncluirDeclaracao = "https://areadocolaboradordesv.unimedbh.com.br/portalrh/conector?" +
 				"ACAO=EXECUTAREGRA&" +
@@ -77,7 +77,10 @@
 					empresasPagadoras[i].valRetencInss) + "&";
 			}
 			urlIncluirDeclaracao += "USER=webservice_INSSCoop&CONNECTION=" + acesso;
-
+			urlIncluirDeclaracao+= "qtdAnexo=" +anexos.length;
+			for(var i = 0; i < anexos.length; i++){
+				urlIncluirDeclaracao+= "&anexo_"+(i+1)+"="+anexos[i];
+			}
 			return sobrepor ? urlIncluirDeclaracao + "&sobrepor=S" : urlIncluirDeclaracao + "&sobrepor=N";
 		}
 
