@@ -141,7 +141,7 @@
 			$scope.hideEmpresa = true;
 			$scope.desabilitarCamposEmpresa = false;
 			$scope.desabilitaEnvio = false;
-			$scope.carregando = false;
+			$scope.carregando = true;
 
         }
 		/* Fim dados Tela */
@@ -244,8 +244,21 @@
 
 		$scope.anexosSelecionados = function (input) {
 
+
+        	var extensoesAceitas = ['.pdf', '.docx', '.doc', '.jpg', '.png'];
+
+
 			$scope.$apply(function ($scope) {
+
 				for (var i = 0; i < input.files.length; i++) {
+
+					var extensaoArquivo = '.' + input.files[i].name.split('.').pop();
+
+
+					if(extensoesAceitas.indexOf(extensaoArquivo) == -1) {
+						montaModal('Atenção', 'Arquivo não aceito: ' + input.files[i].name);
+						continue;
+					}
 
 
 					if (!$scope.contemNaLista(input.files[i].name, $scope.anexos)) {
@@ -263,7 +276,6 @@
 
 
             input.value = '';
-
 
 
 		}
@@ -374,7 +386,9 @@
 								}).then(function (response) {
 									montaModal("Sucesso","Envio concluído com sucesso!");
                                     $scope.limparTela();
-								});
+								}, function myError(response) {
+                                    console.log(response.statusText);
+                                });
 							}
 						}
 						else {
@@ -389,7 +403,6 @@
 					console.log(response.statusText);
 				});
 			}, function myError(response) {
-				console.log('aqui');
                 console.log(response.statusText);
             });
 		}
