@@ -133,12 +133,12 @@
 				valRetencInss: 0.0
 			}
 			$scope.ArrayArquivoEmBytes = [];
-			$scope.somaValoresRetencInss = 0;
+			$scope.somaValoresRetencInss = 0.0;
 			$scope.filterEmpresa = [];
 			$scope.hideEmpresa = true;
 			$scope.desabilitarCamposEmpresa = false;
 			$scope.desabilitaEnvio = false;
-			$scope.carregando = false;
+			$scope.carregando = true;
 
         }
 		/* Fim dados Tela */
@@ -272,11 +272,6 @@
 
 
 
-		}
-
-		$scope.verAnexos = function() {
-			console.log($scope.anexos);
-			console.log($scope.anexosBase64);
 		}
 
 
