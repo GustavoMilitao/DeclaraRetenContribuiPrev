@@ -133,6 +133,7 @@
 			}
 			$scope.ArrayArquivoEmBytes = [];
 			$scope.somaValoresRetencInss = 0.0;
+			$scope.somaValoresRetencInssStr = "";
 			$scope.filterEmpresa = [];
 			$scope.hideEmpresa = true;
 			$scope.desabilitarCamposEmpresa = false;
@@ -190,7 +191,8 @@
 				} else {
 					$scope.incluirEmpresa($scope.empresaAIncluir, $scope.empresasPagadoras);
 					$scope.desabilitarCamposEmpresa = false;
-					$scope.somaValoresRetencInss += parseFloat($scope.empresaAIncluir.valRetencInss);
+					$scope.somaValoresRetencInss += parseFloat($scope.empresaAIncluir.valRetencInss.replace(",","."));
+					$scope.somaValoresRetencInssStr = $scope.somaValoresRetencInss.toString().replace(".",",");
 					$scope.empresaAIncluir = {
 						numIns: "",
 						razSoc: "",
@@ -216,6 +218,7 @@
 			for (var i = 0; i < $scope.empresasPagadoras.length; i++) {
 				if ($scope.empresasPagadoras[i].numIns === cnpj) {
 					$scope.somaValoresRetencInss -= $scope.empresasPagadoras[i].valRetencInss;
+					$scope.somaValoresRetencInssStr = $scope.somaValoresRetencInss.toString().replace(".",",");
 					$scope.empresasPagadoras.splice(i, 1);
 
 				}
