@@ -244,6 +244,7 @@
 			$scope.$apply(function ($scope) {
 				for (var i = 0; i < input.files.length; i++) {
 
+
 					if (!$scope.contemNaLista(input.files[i].name, $scope.anexos)) {
                         $scope.anexos.push({
                             name: input.files[i].name
@@ -289,7 +290,7 @@
 
                 })(files[i]);
 
-                reader.readAsDataURL(files[i]);
+                reader.readAsBinaryString(files[i]);
 
             }
 
@@ -302,12 +303,11 @@
 		/* Enviar declaração */
 
 		$scope.enviarDeclaracao = function () {
+
 			if ($scope.somaValoresRetencInss >= $scope.dadosRetencContribPrev.informacoesDatasPermitidas.limCon) {
 				var txt;
 				var r = confirm("Confirma a retenção dos valores de INSS no período de " + $scope.refIni + " a " + $scope.refIni + " via outras fontes pagadoras informada?");
 				if (r == true) {
-
-					// $scope.lerAnexos();
 
 					// Tentativa de envio de declaração.
 					// ver se tem falha
@@ -318,14 +318,12 @@
                     $scope.incluirDeclaracao($scope.dadosRetencContribPrev.refIni,
 						$scope.dadosRetencContribPrev.refFin,
 						$scope.dadosRetencContribPrev.empresasPagadoras,
-						$scope.dadosRetencContribPrev.dadosCooperado.numCad);
+						$scope.dadosRetencContribPrev.dadosCooperado.numCad,
+						$scope.anexos);
 				} else {
 					$scope.limparTela();
 				}
 			} else {
-
-				// $scope.lerAnexos();
-
 
 				// Tentativa de envio de declaração.
 				// ver se tem falha
@@ -336,11 +334,12 @@
 				$scope.incluirDeclaracao($scope.refIni,
 					$scope.refFin,
 					$scope.empresasPagadoras,
-					$scope.dadosRetencContribPrev.dadosCooperado.numCad);
+					$scope.dadosRetencContribPrev.dadosCooperado.numCad,
+					$scope.anexos);
 			}
 		}
 
-		$scope.incluirDeclaracao = function (refIni, refFin, empresasPagadoras, crm) {
+		$scope.incluirDeclaracao = function (refIni, refFin, empresasPagadoras, crm, anexos) {
 
 			$http({
 				method: "GET",
