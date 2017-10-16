@@ -76,7 +76,7 @@
 					empresasPagadoras[i].valSalarContrib +
 					empresasPagadoras[i].valRetencInss) + "&";
 			}
-			// urlIncluirDeclaracao += "USER=webservice_INSSCoop&CONNECTION=" + acesso;
+			urlIncluirDeclaracao += "USER=webservice_INSSCoop&CONNECTION=" + acesso;
 			urlIncluirDeclaracao+= "qtdAnexo=" +anexos.length;
 			for(var i = 0; i < anexos.length; i++){
 				urlIncluirDeclaracao+= "&anexo_"+(i+1)+"="+anexos[i];
