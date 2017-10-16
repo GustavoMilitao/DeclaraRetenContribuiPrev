@@ -124,7 +124,6 @@
 			$scope.refFin = "";
 			$scope.empresasPagadoras = [];
 			$scope.anexos = [];
-            $scope.anexosBase64 = [];
 			$scope.liEAceito = false;
 			$scope.empresaAIncluir = {
 				numIns: "",
@@ -232,19 +231,6 @@
 
 			var nameAnexo = anexo.name;
 
-			var anexosBase64 = $scope.anexosBase64
-
-			for(var i = 0; i < anexosBase64.length; i++) {
-
-				if(anexosBase64[i].name == nameAnexo) {
-					anexosBase64.splice(i, 1);
-					break;
-				}
-
-			}
-
-
-
 			for (var i = 0; i < $scope.anexos.length; i++) {
 				if ($scope.anexos[i].name === anexo.name) {
 					$scope.anexos.splice(i, 1);
@@ -256,10 +242,13 @@
 
 			$scope.$apply(function ($scope) {
 				for (var i = 0; i < input.files.length; i++) {
-					if (!$scope.contemNaLista(input.files[i].name, $scope.anexos))
-						$scope.anexos.push({
+
+					if (!$scope.contemNaLista(input.files[i].name, $scope.anexos)) {
+                        $scope.anexos.push({
                             name: input.files[i].name
-						});
+                        });
+					}
+
 				}
 
 			});
