@@ -202,8 +202,6 @@
 				}
 			}
 
-            console.log($scope.empresasPagadoras);
-
 		}
 
 		$scope.incluirEmpresa = function (empresa, lista) {
@@ -306,6 +304,12 @@
 
 		$scope.enviarDeclaracao = function () {
 
+			if($scope.empresasPagadoras.length == 0) {
+				montaModal('Atenção!', 'É necessário incluir pelo menos 1 empresa pagadora!');
+				return false;
+			}
+
+
 			if ($scope.somaValoresRetencInss >= $scope.dadosRetencContribPrev.informacoesDatasPermitidas.limCon) {
 				var txt;
 				var r = confirm("Confirma a retenção dos valores de INSS no período de " + $scope.refIni + " a " + $scope.refIni + " via outras fontes pagadoras informada?");
@@ -397,11 +401,12 @@
 			//Se o campo estiver vazio não há nada a ser validado
 			if ($scope.refIni.length == 0) return;
 
-			var refIniArr = $scope.refIni.split('/');
+
+			var mes = $scope.refIni.substr(0, 2);
 
 			//Verifica se o mês do período é válido
-			if (refIniArr[0] < 1 || refIniArr[0] > 12) {
-				montaModal("Atenção","O mês do período deve estar entre 1 e 12!");
+			if (mes < 1 || mes > 12) {
+				montaModal("Atenção!","O mês do período deve estar entre 1 e 12!");
 				$scope.refIni = '';
 				$('#refIni').focus();
 				return;
@@ -434,16 +439,15 @@
 			//Se o campo estiver vazio não há nada a ser validado
 			if ($scope.refFin.length == 0) return;
 
-			var refFimArr = $scope.refFin.split('/');
+			var mes = $scope.refFin.substr(0, 2);
 
 			//Verifica se o mês do período é válido
-			if (refFimArr[0] < 1 || refFimArr[0] > 12) {
+			if (mes < 1 || mes > 12) {
 				montaModal("Atenção","O mês do período deve estar entre 1 e 12!");
 				$scope.refFin = '';
 				$('#refFin').focus();
 				return;
 			}
-
 
 
 			if (!$scope.isAnoCorrente($scope.refFin)) {
@@ -463,10 +467,8 @@
 
 		$scope.isCompetenciaAtual = function () {
 
-			var splitDtIniRef = $scope.refIni.split("/");
-
-			var mes = splitDtIniRef[0];
-			var ano = splitDtIniRef[1];
+			var mes = $scope.refIni.substr(0, 2);
+			var ano = $scope.refIni.substr(2, 4);
 
 			var dataAtual = new Date();
 
@@ -480,10 +482,8 @@
 
 		$scope.isCompetenciaAnterior = function () {
 
-			var splitDtIniRef = $scope.refIni.split("/");
-
-			var mes = splitDtIniRef[0];
-			var ano = splitDtIniRef[1];
+			var mes = $scope.refIni.substr(0, 2);
+			var ano = $scope.refIni.substr(2, 4);
 
 			var dataAtual = new Date();
 
@@ -496,7 +496,6 @@
 				return true;
 			}
 
-
 			return false;
 
 		}
@@ -506,9 +505,7 @@
 
 			var dataAtual = new Date();
 
-			var splitDtIniRef = valorCampo.split("/");
-
-			var ano = splitDtIniRef[1];
+			var ano = valorCampo.substr(2, 4);
 
 			if (ano != dataAtual.getFullYear()) {
 				return false;
@@ -520,14 +517,11 @@
 
 		$scope.isRefFinalMaior = function (refIni, refFim) {
 
-			var refIniArr = refIni.split('/');
-			var refFimArr = refFim.split('/');
+			var diaInicio = refIni.substr(0, 2);
+			var anoInicio = refIni.substr(2, 4);
 
-			var diaInicio = refIniArr[0];
-			var anoInicio = refIniArr[1];
-
-			var diaFim = refFimArr[0];
-			var anoFim = refFimArr[1];
+			var diaFim = refFim.substr(0, 2);
+			var anoFim = refFim.substr(2, 4);
 
 			if (anoFim < anoInicio) return true;
 
@@ -627,6 +621,10 @@
 		}
 		/* Fim Varredura de listas */
 
+
+
+
+
 		$scope.limparTela();
 		$scope.getDadosCooperado(7007);
 
@@ -640,7 +638,14 @@
 		angular.element(document).ready(function () {
 		});
 	}
-})();
+})()
+
+
+function montaModal(titulo, mensagem) {
+	alert(mensagem);
+}
+
+
 
 var getNumDiasMes = function (mes, ano) {
 
