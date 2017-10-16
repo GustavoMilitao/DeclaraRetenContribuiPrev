@@ -69,12 +69,12 @@
 				<div class="row">
 					<div class="col-md-3">
 						<label for="refIni">Mês inicial de Referência</label>
-						<input mask="19/9999" ng-blur="tratarInicioReferencia()" name="refIni" type="text" restrict="reject" id="refIni" ng-model="refIni"
+						<input mask="19/9999" clean="true" ng-blur="tratarInicioReferencia()" name="refIni" type="text" restrict="reject" id="refIni" ng-model="refIni"
 						 class="form-control">
 					</div>
 					<div class="col-md-3">
 						<label for="refFin">Mês final de Referência</label>
-						<input restrict="reject" mask="19/9999" id="refFin" ng-model="refFin" class="form-control" ng-blur="tratarFimReferencia()">
+						<input restrict="reject" mask="19/9999" clean="true" id="refFin" ng-model="refFin" class="form-control" ng-blur="tratarFimReferencia()">
 					</div>
 				</div>
 				<div class="row">
@@ -164,7 +164,7 @@
 														<td colspan="2">
 														</td>
 														<td class="valorNegrito" colspan="2">
-															<label>{{somaValoresRetencInss}}
+															<label>{{somaValoresRetencInssStr}}
 												</label>
 														</td>
 														<td colspan="2">

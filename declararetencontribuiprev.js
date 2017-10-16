@@ -56,8 +56,7 @@
 				"listaDeclaracoes=S&" +
 				"listaCNPJ=S&" +
 				"USER=webservice_INSSCoop&" +
-				"CONNECTION=" + acesso; //+ "&" +
-				//"listaFoto=N";
+				"CONNECTION=" + acesso; 
 		}
 
 		$scope.getUrlIncluirDeclaracao = function (refIni, refFin, empresasPagadoras, crm, acesso, sobrepor) {
@@ -73,13 +72,13 @@
 				urlIncluirDeclaracao += "dadosDeclaracao_" + (i + 1) + "=";
 				urlIncluirDeclaracao += (refIni +
 					refFin +
-					empresasPagadoras[i].cnpj +
+					empresasPagadoras[i].numIns +
 					empresasPagadoras[i].valSalarContrib +
 					empresasPagadoras[i].valRetencInss) + "&";
 			}
 			urlIncluirDeclaracao += "USER=webservice_INSSCoop&CONNECTION=" + acesso;
 
-			return sobrepor ? urlIncluirDeclaracao + "&sobrepor=S" : urlIncluirDeclaracao;
+			return sobrepor ? urlIncluirDeclaracao + "&sobrepor=S" : urlIncluirDeclaracao + "&sobrepor=N";
 		}
 
 		/* Fim URLS */
@@ -101,7 +100,7 @@
 					url: urlGetDadosCooperado,
 				}).then(function (response) {
 					if (response.data.falha) {
-						alert(response.data.falha.erroExecucao);
+						montaModal("Erro",response.data.falha.erroExecucao);
 						$scope.desabilitaEnvio = true;
 					}
 					else {
@@ -133,12 +132,13 @@
 				valRetencInss: 0.0
 			}
 			$scope.ArrayArquivoEmBytes = [];
-			$scope.somaValoresRetencInss = 0;
+			$scope.somaValoresRetencInss = 0.0;
+			$scope.somaValoresRetencInssStr = "";
 			$scope.filterEmpresa = [];
 			$scope.hideEmpresa = true;
 			$scope.desabilitarCamposEmpresa = false;
 			$scope.desabilitaEnvio = false;
-			$scope.carregando = false;
+			$scope.carregando = true;
 
         }
 		/* Fim dados Tela */
@@ -163,7 +163,7 @@
 
 		$scope.insertLineEmpresa = function (empresa) {
 			if ($scope.contemEmpresaNaLista(empresa.numIns, $scope.empresasPagadoras)) {
-				alert(empresa.razSoc + " já adicionada.");
+				montaModal("Atenção",empresa.razSoc + " já adicionada.");
 			} else {
 				$scope.empresaAIncluir.numIns = empresa.numIns;
 				$scope.empresaAIncluir.razSoc = empresa.razSoc;
@@ -182,16 +182,17 @@
 
 			if (!$scope.empresaAIncluir.numIns || $scope.empresaAIncluir.numIns == "" ||
 				!$scope.empresaAIncluir.valSalarContrib || $scope.empresaAIncluir.valSalarContrib == 0) {
-				alert("Obrigatório informar o CNPJ e Valor do Salário de Contribuição!");
+					montaModal("Atenção","Obrigatório informar o CNPJ e Valor do Salário de Contribuição!");
 			}
 			else {
 				//Validar CNPJ.
 				if (parseFloat($scope.empresaAIncluir.valRetencInss) > parseFloat($scope.empresaAIncluir.valSalarContrib)) {
-					alert("Valor de retenção do INSS deverá ser inferior ou igual ao valor do salário de contribuição!");
+					montaModal("Atenção","Valor de retenção do INSS deverá ser inferior ou igual ao valor do salário de contribuição!");
 				} else {
 					$scope.incluirEmpresa($scope.empresaAIncluir, $scope.empresasPagadoras);
 					$scope.desabilitarCamposEmpresa = false;
-					$scope.somaValoresRetencInss += parseFloat($scope.empresaAIncluir.valRetencInss);
+					$scope.somaValoresRetencInss += parseFloat($scope.empresaAIncluir.valRetencInss.replace(",","."));
+					$scope.somaValoresRetencInssStr = $scope.somaValoresRetencInss.toString().replace(".",",");
 					$scope.empresaAIncluir = {
 						numIns: "",
 						razSoc: "",
@@ -207,7 +208,7 @@
 
 		$scope.incluirEmpresa = function (empresa, lista) {
 			if ($scope.contemEmpresaNaLista(empresa.numIns, lista)) {
-				alert(empresa.razSoc + " já adicionada.");
+				montaModal("Atenção",empresa.razSoc + " já adicionada.");
 			} else {
 				lista.push(empresa);
 			}
@@ -217,6 +218,7 @@
 			for (var i = 0; i < $scope.empresasPagadoras.length; i++) {
 				if ($scope.empresasPagadoras[i].numIns === cnpj) {
 					$scope.somaValoresRetencInss -= $scope.empresasPagadoras[i].valRetencInss;
+					$scope.somaValoresRetencInssStr = $scope.somaValoresRetencInss.toString().replace(".",",");
 					$scope.empresasPagadoras.splice(i, 1);
 
 				}
@@ -363,17 +365,17 @@
 									method: "POST",
 									url: $scope.getUrlIncluirDeclaracao(refIni, refFin, empresasPagadoras, crm, acesso, true),
 								}).then(function (response) {
-									alert("Envio concluído com sucesso!");
+									montaModal("Sucesso","Envio concluído com sucesso!");
                                     $scope.limparTela();
 								});
 							}
 						}
 						else {
-							alert(response.data.falha.erroExecucao);
+							montaModal("Erro",response.data.falha.erroExecucao);
 						}
 					}
 					else {
-						alert("Envio concluído com sucesso!");
+						montaModal("Sucesso","Envio concluído com sucesso!");
                         $scope.limparTela();
 					}
 				}, function myError(response) {
@@ -399,7 +401,7 @@
 
 			//Verifica se o mês do período é válido
 			if (refIniArr[0] < 1 || refIniArr[0] > 12) {
-				alert("O mês do período deve estar entre 1 e 12!");
+				montaModal("Atenção","O mês do período deve estar entre 1 e 12!");
 				$scope.refIni = '';
 				$('#refIni').focus();
 				return;
@@ -411,15 +413,15 @@
 			var diaLimite = $scope.dadosRetencContribPrev.informacoesDatasPermitidas.diaLim;
 
 			if (!$scope.isAnoCorrente($scope.refIni)) {
-				alert("Mês inicial de referência deverá ser dentro do ano corrente!");
+				montaModal("Atenção","Mês inicial de referência deverá ser dentro do ano corrente!");
 				$scope.refIni = '';
 				$('#refIni').focus();
 			} else if ($scope.isCompetenciaAnterior()) {
-				alert("Não é permitido o lançamento de declarações com competência inicial inferior à competência atual!");
+				montaModal("Atenção","Não é permitido o lançamento de declarações com competência inicial inferior à competência atual!");
 				$scope.refIni = '';
 				$('#refIni').focus();
 			} else if ($scope.isCompetenciaAtual() && dataAtual.getDate() > diaLimite) {
-				alert("Data limite para envio da declaração do mês corrente ultrapassada!");
+				montaModal("Atenção","Data limite para envio da declaração do mês corrente ultrapassada!");
 				$scope.refIni = '';
 				$('#refIni').focus();
 			}
@@ -436,7 +438,7 @@
 
 			//Verifica se o mês do período é válido
 			if (refFimArr[0] < 1 || refFimArr[0] > 12) {
-				alert("O mês do período deve estar entre 1 e 12!");
+				montaModal("Atenção","O mês do período deve estar entre 1 e 12!");
 				$scope.refFin = '';
 				$('#refFin').focus();
 				return;
@@ -445,14 +447,14 @@
 
 
 			if (!$scope.isAnoCorrente($scope.refFin)) {
-				alert("Mês final de referência deverá ser dentro do ano corrente!");
+				montaModal("Atenção","Mês final de referência deverá ser dentro do ano corrente!");
 				$scope.refFin = '';
 				$('#refFin').focus();
 			}
 
 
 			if ($scope.isRefFinalMaior($scope.refIni, $scope.refFin)) {
-				alert("Mês final de referência deverá ser anterior ou igual ao mês ano inicial de referência!");
+				montaModal("Atenção","Mês final de referência deverá ser anterior ou igual ao mês ano inicial de referência!");
 				$scope.refFin = '';
 				$('#refFin').focus();
 			}
@@ -561,12 +563,12 @@
 		$scope.tratarPermissaoEnvioDeclaracao = function () {
 			if (new Date() > $scope.getDataFimInc()) { //RN 08
 				$scope.desabilitaEnvio = true;
-				alert("Prazo para envio da declaração encerrado em " + $scope.dadosRetencContribPrev.informacoesDatasPermitidas.fimInc);
+				montaModal("Atenção","Prazo para envio da declaração encerrado em " + $scope.dadosRetencContribPrev.informacoesDatasPermitidas.fimInc);
 			}
 			else {
 				if (new Date() < $scope.getDataInicioInc()) { // RN 09
 					$scope.desabilitaEnvio = true;
-					alert("Declaração de Retenção de contribuição previdenciária poderá ser enviada a partir do dia " + $scope.dadosRetencContribPrev.informacoesDatasPermitidas.iniInc);
+					montaModal("Atenção","Declaração de Retenção de contribuição previdenciária poderá ser enviada a partir do dia " + $scope.dadosRetencContribPrev.informacoesDatasPermitidas.iniInc);
 				}
 			}
 		}
