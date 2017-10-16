@@ -56,8 +56,7 @@
 				"listaDeclaracoes=S&" +
 				"listaCNPJ=S&" +
 				"USER=webservice_INSSCoop&" +
-				"CONNECTION=" + acesso; //+ "&" +
-				//"listaFoto=N";
+				"CONNECTION=" + acesso; 
 		}
 
 		$scope.getUrlIncluirDeclaracao = function (refIni, refFin, empresasPagadoras, crm, acesso, sobrepor) {
@@ -73,13 +72,13 @@
 				urlIncluirDeclaracao += "dadosDeclaracao_" + (i + 1) + "=";
 				urlIncluirDeclaracao += (refIni +
 					refFin +
-					empresasPagadoras[i].cnpj +
+					empresasPagadoras[i].numIns +
 					empresasPagadoras[i].valSalarContrib +
 					empresasPagadoras[i].valRetencInss) + "&";
 			}
 			urlIncluirDeclaracao += "USER=webservice_INSSCoop&CONNECTION=" + acesso;
 
-			return sobrepor ? urlIncluirDeclaracao + "&sobrepor=S" : urlIncluirDeclaracao;
+			return sobrepor ? urlIncluirDeclaracao + "&sobrepor=S" : urlIncluirDeclaracao + "&sobrepor=N";
 		}
 
 		/* Fim URLS */
