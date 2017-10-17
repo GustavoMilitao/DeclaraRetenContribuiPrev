@@ -73,14 +73,16 @@
 				urlIncluirDeclaracao += (refIni +
 					refFin +
 					empresasPagadoras[i].numIns +
-					empresasPagadoras[i].valSalarContrib +
-					empresasPagadoras[i].valRetencInss) + "&";
+					formatarMonetario(empresasPagadoras[i].valSalarContrib) +
+					formatarMonetario(empresasPagadoras[i].valRetencInss)) + "&";
 			}
+
 			urlIncluirDeclaracao += "USER=webservice_INSSCoop&CONNECTION=" + acesso;
 			urlIncluirDeclaracao+= "qtdAnexo=" +anexos.length;
 			for(var i = 0; i < anexos.length; i++){
 				urlIncluirDeclaracao+= "&anexo_"+(i+1)+"="+anexos[i];
 			}
+
 			return sobrepor ? urlIncluirDeclaracao + "&sobrepor=S" : urlIncluirDeclaracao + "&sobrepor=N";
 		}
 
@@ -110,6 +112,7 @@
 						$scope.dadosRetencContribPrev = response.data;
 						$scope.tratarPermissaoEnvioDeclaracao();
 						$scope.carregando = false;
+
 					}
 				}, function myError(response) {
 					console.log(response.statusText);
@@ -644,6 +647,7 @@
 		$scope.limparTela();
 		$scope.getDadosCooperado(7007);
 
+
 		/* MOCKS */
 
 		$scope.param1 = "Se dados acima incorretos, entrar em contato com sua analista de relacionamento para atualização.";
@@ -680,4 +684,18 @@ var getNumDiasMes = function (mes, ano) {
 		case "11": return 30;
 		case "12": return 31;
 	}
+}
+
+
+function formatarMonetario(valor) {
+
+    var pad = '000000.00';
+
+    if(typeof valor == 'number') {
+        valor = valor.toFixed(2);
+    }
+
+    valor = valor.replace(',', '.');
+
+    return pad.substr(0, pad.length - valor.length) + valor;
 }
