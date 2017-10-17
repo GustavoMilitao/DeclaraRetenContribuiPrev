@@ -113,6 +113,8 @@
 						$scope.tratarPermissaoEnvioDeclaracao();
 						$scope.carregando = false;
 
+                        $scope.dadosRetencContribPrev.informacoesDatasPermitidas.diaLim = 19;
+
 					}
 				}, function myError(response) {
 					console.log(response.statusText);
@@ -248,31 +250,50 @@
 		$scope.anexosSelecionados = function (input) {
 
 
-        	var extensoesAceitas = ['.pdf', '.docx', '.doc', '.jpg', '.png'];
 
 
 			$scope.$apply(function ($scope) {
 
+
+                //Validar total tamanho arquivos
+                if(!$scope.validarTamanhoAnexos(input.files)) {
+                    $scope.anexos = [];
+                    montaModal('Atenção', 'O total de arquivos não pode ultrapassar 3MB.');
+                    return false;
+                }
+
+
+
+                var arquivosNaoAceitos = [];
+
+                var extensoesAceitas = ['.pdf', '.docx', '.doc', '.jpg', '.png'];
+
+
 				for (var i = 0; i < input.files.length; i++) {
 
-					var extensaoArquivo = '.' + input.files[i].name.split('.').pop();
-
+                    var extensaoArquivo = '.' + input.files[i].name.split('.').pop();
 
 					if(extensoesAceitas.indexOf(extensaoArquivo) == -1) {
-						montaModal('Atenção', 'Arquivo não aceito: ' + input.files[i].name);
+                        arquivosNaoAceitos.push(input.files[i].name);
 						continue;
 					}
 
 
 					if (!$scope.contemNaLista(input.files[i].name, $scope.anexos)) {
                         $scope.anexos.push({
-                            name: input.files[i].name
+                            name: input.files[i].name,
+							size: input.files[i].size
                         });
 					}
 
 				}
 
 			});
+
+
+            if(arquivosNaoAceitos.length > 0) {
+                montaModal('Atencao', 'A extensão dos seguintes arquivos não são permitidas: "' + arquivosNaoAceitos.join('", "') + '".');
+            }
 
 
 			$scope.lerAnexos(input.files);
@@ -283,6 +304,50 @@
 
 		}
 
+
+		$scope.validarTamanhoAnexos = function(files) {
+
+			var anexosCarregados = 0;
+			var anexosCarregar = 0;
+
+			for(var i = 0; i < $scope.anexos.length; i++) {
+                anexosCarregados += $scope.anexos[i].size;
+			}
+
+
+            for(var i = 0; i < files.length; i++) {
+                anexosCarregar += files[i].size;
+            }
+
+            return (anexosCarregados + anexosCarregar) <= 3145728;
+
+		}
+
+
+		$scope.validarExtensaoArquivos = function (files) {
+
+
+            var arquivosNaoAceitos = [];
+
+            var extensoesAceitas = ['.pdf', '.docx', '.doc', '.jpg', '.png'];
+
+
+            for(var i = 0; i < files.length; i++) {
+
+                var extensaoArquivo = '.' + files[i].name.split('.').pop();
+
+                if(extensoesAceitas.indexOf(extensaoArquivo) == -1) {
+                    arquivosNaoAceitos.push(files[i].name);
+				}
+
+			}
+
+
+			if(arquivosNaoAceitos.length > 0) {
+            	montaModal('Atencao', 'A extensão dos seguintes arquivos não aceitas.');
+			}
+
+        }
 
 		$scope.lerAnexos = function(files) {
 
